@@ -42,7 +42,7 @@ El proyecto consiste en una aplicación para la gestión de reservas de laborato
 
 ## MODELO DE ARQUITECTURA
 
-![alt text](image-27.png)
+![alt text](assets/image-27.png)
 
 
 ## PASOS PARA CONSTRUIR EL PROYECTO
@@ -57,48 +57,48 @@ El proyecto consiste en una aplicación para la gestión de reservas de laborato
 
   1. Como primer paso, se crean dos repositorios en GitHub, tanto para el backend como para el frontend.
 
-        ![alt text](image-28.png)
+        ![alt text](assets/image-28.png)
     
 
   2. Todos los integrantes del grupo crean su cuenta en AzureDevOps <a href="https://go.microsoft.com/fwlink/?LinkId=2014881" target="_blank">Crear una cuenta</a>
 
   3. Una vez ingresa deberá crear el proyecto. (Solo lo hace un integrante del equipo). Crea la organización, y dentro de esta crea el proyecto con configuración avanzada tipo de proceso Scrum, con visibilidad privada, y su descripción correspondiente.
 
-![alt text](image.png)
+![alt text](assets/image.png)
 
-![alt text](image-1.png)
+![alt text](assets/image-1.png)
 
-![alt text](image-2.png)
+![alt text](assets/image-2.png)
 
-![alt text](image-3.png)
+![alt text](assets/image-3.png)
 
-![alt text](image-4.png)
+![alt text](assets/image-4.png)
 
-![alt text](image-5.png)
+![alt text](assets/image-5.png)
 
 
 
   4. Cree un equipo en el siguiente tutorial encontrará cómo hacerlo <a href="https://github.com/microsoft/azuredevopslabs/tree/master/labs/azuredevops/agile" target="_blank">Creando equipos</a>, para este proceso todos 
      los integrantes deberán tener una cuenta en AzureDevOps.
 
-![alt text](image-6.png)
-![alt text](image-7.png)
-![alt text](image-8.png)
+![alt text](assets/image-6.png)
+![alt text](assets/image-7.png)
+![alt text](assets/image-8.png)
 
     
   5. Integre los repositorios de gitHub en la configuración de AzureDevOps
        From your project in Azure DevOps, go to Project settings > GitHub connections.
        To add or remove repositories, select the More options ellipses for the connection and choose Add repositories or Remove repositories from the menu.
 
-   ![alt text](image-29.png)
+   ![alt text](assets/image-29.png)
 
   6. Una vez integrados los repositorios, ahora, se configuran Iteration and Area Paths para habilitar la opción de añadir Épicas al proyecto. 
 
   7. Se dirige al nombre del equipo y selecciona la opción del inciso anterior, y habilita Epics.
 
-![alt text](image-9.png)
+![alt text](assets/image-9.png)
 
-![alt text](image-13.png)
+![alt text](assets/image-13.png)
 
 
   8. Defina los spring del proyecto. luego para configurar, seleccionar la opción Iterations, select Iterations, determinar las fechas de cada Spring, y eliminar Springs innecesarios.
@@ -120,24 +120,24 @@ El proyecto consiste en una aplicación para la gestión de reservas de laborato
     - Conectar la interfaz web con el API REST.
     - Realizar pruebas de integración y validación de funcionalidades.
 
-![alt text](image-11.png)
+![alt text](assets/image-11.png)
 
-![alt text](image-12.png)
+![alt text](assets/image-12.png)
 
-![alt text](image-14.png)
+![alt text](assets/image-14.png)
 
-![alt text](image-15.png)
+![alt text](assets/image-15.png)
 
 
     
   9. Incluir subáreas para poder añadir las épicas correctamente. Para esto, se selecciona Areas, y en el nombre del proyecto se incluyen las subáreas, y se le da Ok.
 
 
-![alt text](image-16.png)
+![alt text](assets/image-16.png)
 
-![alt text](image-17.png)
+![alt text](assets/image-17.png)
 
-![alt text](image-18.png)
+![alt text](assets/image-18.png)
 
   10. Definiendo la épica, y añadirlas en el proyecto, dándole en la sección de Board Work Items --> Work Items --> new work item --> Epic --> con la descripción correspondiente.
 
@@ -146,11 +146,11 @@ El proyecto consiste en una aplicación para la gestión de reservas de laborato
     2. Frontend: Crear una interfaz de usuario que permita visualizar la disponibilidad y gestionar reservas.
     3. Backend: Implementar un API REST para el manejo de la lógica de negocio y persistencia de datos.
 
-![alt text](image-19.png)
+![alt text](assets/image-19.png)
 
-![alt text](image-21.png)
+![alt text](assets/image-21.png)
 
-![alt text](image-22.png)
+![alt text](assets/image-22.png)
 
 
 
@@ -164,7 +164,7 @@ El proyecto consiste en una aplicación para la gestión de reservas de laborato
     4. Validación de Reservas: Evitar reservas duplicadas para un mismo laboratorio, fecha y hora.
     5. Notificación de Reserva Exitosa: Enviar una confirmación al usuario después de realizar la reserva.
 
-  ![alt text](image-23.png)
+  ![alt text](assets/image-23.png)
 
 
 
