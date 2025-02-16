@@ -45,11 +45,6 @@ El proyecto consiste en una aplicación para la gestión de reservas de laborato
 ![alt text](assets/image-27.png)
 
 
-## PASOS PARA CONSTRUIR EL PROYECTO
-
-1- Cree un proyecto en GitHub para el back y para el front de manera independiente puede utilizar la siguiente guía para definir el scaffolding del back <a href="https://ragunathrajasekaran.medium.com/https-medium-com-ragunathrajasekaran-lets-learn-full-stack-development-part2-7986debc485d" target="_blank">Ver guía</a> No olvide el que el proyecto debe ser maven. Mantenga el esquema de nombramiento de los artefactos.
-
-
 ## PLANEACIÓN DEL PROYECTO.
 - Esta sección tiene como objetivo realizar toda la planificación que el equipo de desarrollo requiere para poder dar inicio al proyecto planteado. Para este objetivo utilizaremos Azure DevOps.
 
@@ -171,6 +166,16 @@ El proyecto consiste en una aplicación para la gestión de reservas de laborato
   8.  Defina las historias de usuario por cada feature definida.
   9.  Defina las tareas asociadas a cada historia de usuario. Estime tiempos y programe cada actividad con su equipo (squad)
  
+
+## PASOS PARA CONSTRUIR EL PROYECTO
+
+1- Definir el scaffolding del back <a href="https://ragunathrajasekaran.medium.com/https-medium-com-ragunathrajasekaran-lets-learn-full-stack-development-part2-7986debc485d" target="_blank">Ver guía</a> No olvide el que el proyecto debe ser maven. Mantenga el esquema de nombramiento de los artefactos.
+
+![alt text](assets/image-30.png)
+![alt text](assets/image-31.png)
+![alt text](assets/image-32.png)
+
+
 
 ## IMPLEMENTACIÓN.
 De acuerdo a la planeación realizada divida las tareas de implementación.
