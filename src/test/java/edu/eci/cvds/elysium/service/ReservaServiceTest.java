@@ -19,7 +19,7 @@ class ReservaServiceTest {
 
     @BeforeEach
     void setUp() {
-        fakeRepo = new ReservaRepository();
+        //fakeRepo = new ReservaRepository();
         reservaService = new ReservaService(fakeRepo);
     }
 
@@ -29,12 +29,12 @@ class ReservaServiceTest {
         nuevaReserva.setFechaReserva(LocalDate.of(2025, 3, 10));
         nuevaReserva.setHoraInicio(LocalTime.of(10, 0));
         nuevaReserva.setHoraFin(LocalTime.of(12, 0));
-        nuevaReserva.setDiaSemana(DiaSemana.LUNES);
+        nuevaReserva.setDiaSemana(DiaSemanaModel.LUNES);
         nuevaReserva.setProposito("Clase de Programación");
         nuevaReserva.setIdLaboratorio("LAB-101");
         nuevaReserva.setIdUsuario("USER-001");
 
-        Reservamodel resultado = reservaService.crearReserva(nuevaReserva);
+        ReservaModel resultado = reservaService.crearReserva(nuevaReserva);
 
         assertNotNull(resultado.getIdReserva());
         assertEquals(EstadoReservaModel.RESERVADA, resultado.getEstado());
@@ -99,8 +99,8 @@ class ReservaServiceTest {
         reserva.setEstado(EstadoReservaModel.RESERVADA);
         fakeRepo.save(reserva);
 
-        Reserva resultado = reservaService.cancelarReserva("RES-001", LocalTime.of(9, 59));
-        assertEquals(EstadoReserva.CANCELADA, resultado.getEstado());
+        ReservaModel resultado = reservaService.cancelarReserva("RES-001", LocalTime.of(9, 59));
+        assertEquals(EstadoReservaModel.CANCELADA, resultado.getEstado());
     }
 
     @Test
