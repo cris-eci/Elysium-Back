@@ -32,8 +32,8 @@ class RecursoServiceTest {
         RecursoModel recurso = new RecursoModel(null, "Computadores MAC", 10,
                 Arrays.asList("Sistema: macOS", "Almacenamiento: 256GB"));
         // Simula la asignación de ID en el guardado
-        when(recursoRepository.save(any(Recurso.class))).thenAnswer(invocation -> {
-            Recurso r = invocation.getArgument(0);
+        when(recursoRepository.save(any(RecursoModel.class))).thenAnswer(invocation -> {
+            RecursoModel r = invocation.getArgument(0);
             if (r.getId() == null || r.getId().isEmpty()) {
                 r.setId(UUID.randomUUID().toString());
             }
