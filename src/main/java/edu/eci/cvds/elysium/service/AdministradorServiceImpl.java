@@ -1,14 +1,12 @@
 package edu.eci.cvds.elysium.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import edu.eci.cvds.elysium.model.Administrador;
 import edu.eci.cvds.elysium.model.Estandar;
 import edu.eci.cvds.elysium.model.Usuario;
 import edu.eci.cvds.elysium.repository.UsuarioRepository;
-import edu.eci.cvds.elysium.service.AdministradorService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class AdministradorServiceImpl extends UsuarioServiceImpl implements AdministradorService {
@@ -67,4 +65,5 @@ public class AdministradorServiceImpl extends UsuarioServiceImpl implements Admi
             usuarioRepository.save(admin);
         }
     }
+    
 }

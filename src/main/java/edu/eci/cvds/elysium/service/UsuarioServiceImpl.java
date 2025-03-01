@@ -1,12 +1,12 @@
 package edu.eci.cvds.elysium.service;
 
-import edu.eci.cvds.elysium.model.Usuario;
-import edu.eci.cvds.elysium.repository.UsuarioRepository;
-import edu.eci.cvds.elysium.service.UsuarioService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import edu.eci.cvds.elysium.model.Usuario;
+import edu.eci.cvds.elysium.repository.UsuarioRepository;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService {

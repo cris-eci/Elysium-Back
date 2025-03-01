@@ -23,7 +23,7 @@ public class AdministradorControllerTest {
     private AdministradorService administradorService;
 
     @Test
-    @DisplayName("POST /api/administrador/agregarUsuario - Agrega un usuario")
+    @DisplayName("POST /api/administrador/agregarUsuario - Agrega un usuario")  
     public void testAgregarUsuario() throws Exception {
         doNothing().when(administradorService).agregarUsuario(1111, "John", "Doe", "john@mail.com");
 
