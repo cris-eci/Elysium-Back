@@ -68,7 +68,7 @@ public class AdministradorController extends UsuarioController{
     @PostMapping("/agregarUsuario")
     public void agregarUsuario(@RequestBody UsuarioDTO usuarioDTO) {
         administradorService.agregarUsuario(usuarioDTO.getId(), usuarioDTO.getNombre(),
-                usuarioDTO.getApellido(), usuarioDTO.getCorreo());
+                usuarioDTO.getApellido(), usuarioDTO.getCorreo(), usuarioDTO.getIsAdmin());
     }
 
     @PutMapping("/actualizarInformacionUsuario")
@@ -87,6 +87,12 @@ public class AdministradorController extends UsuarioController{
         administradorService.habilitarUsuario(id);
         return ResponseEntity.ok("Usuario habilitado exitosamente");
     }
+
+    @PutMapping("{id}/hacerAdmin")
+    public ResponseEntity<String> hacerAdmin(@PathVariable int id) {
+        administradorService.hacerAdmin(id);
+        return ResponseEntity.ok("Usuario ahora es administrador");
+    }   
 
 
     // ----------

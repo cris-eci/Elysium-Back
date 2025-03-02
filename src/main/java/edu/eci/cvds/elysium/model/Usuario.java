@@ -60,10 +60,14 @@ public abstract class Usuario {
         this.activo = activo;
     }
     
-    // Método abstracto que se implementará en Administrador
-    public abstract List<Salon> getSalones();
-
     public void setAdmin(boolean esAdmin) {
         this.isAdmin = esAdmin;
     }   
+
+    public boolean getIsAdmin(){
+        return isAdmin;
+    }
+    // Método abstracto que se implementará en Administrador
+    public abstract List<Salon> getSalones();
+
 }

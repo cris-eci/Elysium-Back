@@ -59,10 +59,17 @@ public class AdministradorServiceImpl extends UsuarioServiceImpl implements Admi
     }
 
     @Override
-    public void agregarUsuario(int idInstitucional, String nombre, String apellido, String correoInstitucional) {
+    public void agregarUsuario(int idInstitucional, String nombre, String apellido, String correoInstitucional,
+            boolean isAdmin) {
         // Se crean usuarios de tipo Estandar al agregarlos desde un administrador
-        Estandar nuevoUsuario = new Estandar(idInstitucional, nombre, apellido, correoInstitucional, true);
-        usuarioRepository.save(nuevoUsuario);
+        if (isAdmin) {
+            Administrador nuevoUsuario = new Administrador(idInstitucional, nombre, apellido, correoInstitucional,
+                    true);
+            usuarioRepository.save(nuevoUsuario);
+        } else {
+            Estandar nuevoUsuario = new Estandar(idInstitucional, nombre, apellido, correoInstitucional, true);
+            usuarioRepository.save(nuevoUsuario);
+        }
     }
 
     @Override
@@ -74,5 +81,14 @@ public class AdministradorServiceImpl extends UsuarioServiceImpl implements Admi
             usuarioRepository.save(admin);
         }
     }
-    
+
+    @Override
+    public void hacerAdmin(int id) {
+        Usuario usuario = usuarioRepository.findById(id);
+        if (usuario != null) {
+            usuario.setAdmin(true);
+            usuarioRepository.save(usuario);
+        }
+    }
+
 }

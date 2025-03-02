@@ -55,7 +55,7 @@ public class InMemoryUsuarioRepository implements UsuarioRepository {
     public List<Usuario> findAllAdmins() {
         List<Usuario> adminUsers = new ArrayList<>();
         for (Usuario usuario : usuarios.values()) {
-            if (usuario.isAdmin()) {
+            if (usuario.getIsAdmin()) {
                 adminUsers.add(usuario);
             }
         }
@@ -66,7 +66,7 @@ public class InMemoryUsuarioRepository implements UsuarioRepository {
     public List<Usuario> findAllActiveAdmins() {
         List<Usuario> activeAdminUsers = new ArrayList<>();
         for (Usuario usuario : usuarios.values()) {
-            if (usuario.isAdmin() && usuario.isActivo()) {
+            if (usuario.getIsAdmin() && usuario.isActivo()) {
                 activeAdminUsers.add(usuario);
             }
         }
@@ -77,7 +77,7 @@ public class InMemoryUsuarioRepository implements UsuarioRepository {
     public List<Usuario> findAllInactiveAdmins() {
         List<Usuario> inactiveAdminUsers = new ArrayList<>();
         for (Usuario usuario : usuarios.values()) {
-            if (usuario.isAdmin() && !usuario.isActivo()) {
+            if (usuario.getIsAdmin() && !usuario.isActivo()) {
                 inactiveAdminUsers.add(usuario);
             }
         }
@@ -88,7 +88,7 @@ public class InMemoryUsuarioRepository implements UsuarioRepository {
     public List<Usuario> findAllActiveNoAdmins() {
         List<Usuario> activeNoAdminUsers = new ArrayList<>();
         for (Usuario usuario : usuarios.values()) {
-            if (!usuario.isAdmin() && usuario.isActivo()) {
+            if (!usuario.getIsAdmin() && usuario.isActivo()) {
                 activeNoAdminUsers.add(usuario);
             }
         }
@@ -99,7 +99,7 @@ public class InMemoryUsuarioRepository implements UsuarioRepository {
     public List<Usuario> findAllInactiveNoAdmins() {
         List<Usuario> inactiveNoAdminUsers = new ArrayList<>();
         for (Usuario usuario : usuarios.values()) {
-            if (!usuario.isAdmin() && !usuario.isActivo()) {
+            if (!usuario.getIsAdmin() && !usuario.isActivo()) {
                 inactiveNoAdminUsers.add(usuario);
             }
         }

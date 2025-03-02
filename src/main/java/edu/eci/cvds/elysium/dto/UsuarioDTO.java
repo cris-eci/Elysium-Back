@@ -7,14 +7,6 @@ public class UsuarioDTO {
     private String correo;
     private boolean isAdmin;
 
-    // Constructor usuario estandar
-    public UsuarioDTO(int id, String nombre, String apellido, String correo) {
-        this.id = id;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.correo = correo;
-    }
-
     // Constructor usuario estandard con isAdmin
     public UsuarioDTO(int id, String nombre, String apellido, String correo, boolean isAdmin) {
         this.id = id;
@@ -29,4 +21,5 @@ public class UsuarioDTO {
     public String getNombre() { return nombre; }
     public String getApellido() { return apellido; }
     public String getCorreo() { return correo; }
+    public boolean getIsAdmin() {return isAdmin;}
 }
