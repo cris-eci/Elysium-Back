@@ -8,19 +8,36 @@ import org.springframework.stereotype.Repository;
 import edu.eci.cvds.elysium.model.Usuario;
 
 @Repository
-
 public interface UsuarioRepository extends MongoRepository<Usuario, Integer> {
     
-    //Usuario save(Usuario usuario);
-    Usuario findById(int idInstitucional);
-    List<Usuario> findAll();
-    List<Usuario> findAllActive();
-    List<Usuario> findAllInactive();
-    List<Usuario> findAllAdmins();
-    List<Usuario> findAllActiveAdmins();
-    List<Usuario> findAllInactiveAdmins();
-    List<Usuario> findAllActiveNoAdmins();
-    List<Usuario> findAllInactiveNoAdmins();
-    // The logic of the delete is going to be changed to inactive and it is going to be put in AdministradorService
-    //void deleteById(int idInstitucional);
+
+    // Este método es opcional si usas el ID de tipo Integer en la anotación @Id
+    Usuario findByIdInstitucional(int idInstitucional);
+
+    List<Usuario>findAll();
+
+    // Retorna todos los usuarios activos
+    List<Usuario> findByActivoTrue();
+
+    // Retorna todos los usuarios inactivos
+    List<Usuario> findByActivoFalse();
+
+    // Retorna todos los usuarios que son administradores
+    List<Usuario> findByIsAdminTrue();
+
+    // Retorna todos los usuarios que NO son administradores
+    List<Usuario> findByIsAdminFalse();
+
+    // Usuarios activos que son administradores
+    List<Usuario> findByActivoTrueAndIsAdminTrue();
+
+    // Usuarios activos que NO son administradores
+    List<Usuario> findByActivoTrueAndIsAdminFalse();
+
+    // Usuarios inactivos que son administradores
+    List<Usuario> findByActivoFalseAndIsAdminTrue();
+
+    // Usuarios inactivos que NO son administradores
+    List<Usuario> findByActivoFalseAndIsAdminFalse();
+
 }

@@ -1,10 +1,14 @@
 package edu.eci.cvds.elysium.controller;
 
-import edu.eci.cvds.elysium.model.Usuario;
-import edu.eci.cvds.elysium.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import edu.eci.cvds.elysium.model.Usuario;
+import edu.eci.cvds.elysium.service.UsuarioService;
 
 @RestController
 @RequestMapping("/api/usuario")

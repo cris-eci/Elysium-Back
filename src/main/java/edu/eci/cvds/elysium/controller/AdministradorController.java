@@ -37,32 +37,32 @@ public class AdministradorController extends UsuarioController{
 
     @GetMapping("/consultarUsuariosInactivos")
     public List<Usuario> findAllInactive() {
-        return administradorService.findAllInactive();
+        return administradorService.consultarUsuariosInactivos();
     }
 
     @GetMapping("/consultarAdmins")
     public List<Usuario> findAllAdmins() {
-        return administradorService.findAllAdmins();
+        return administradorService.consultarUsuariosAdmins();
     }
 
     @GetMapping("/consultarAdminsActivos")
     public List<Usuario> findAllActiveAdmins() {
-        return administradorService.findAllActiveAdmins();
+        return administradorService.consultarUsuariosActiveAdmins();
     }
 
     @GetMapping("/consultarAdminsInactivos")
     public List<Usuario> findAllInactiveAdmins() {
-        return administradorService.findAllInactiveAdmins();
+        return administradorService.consultarUsuariosInactiveAdmins();
     }
 
     @GetMapping("/consultarNoAdminsActivos")
     public List<Usuario> findAllActiveNoAdmins() {
-        return administradorService.findAllActiveNoAdmins();
+        return administradorService.consultarUsuariosActiveNoAdmins();
     }
 
     @GetMapping("/consultarNoAdminsInactivos")
     public List<Usuario> findAllInactiveNoAdmins() {
-        return administradorService.findAllInactiveNoAdmins();
+        return administradorService.consultarUsuariosInactiveNoAdmins();
     }
 
     @PostMapping("/agregarUsuario")
