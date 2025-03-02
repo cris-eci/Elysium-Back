@@ -7,7 +7,7 @@ import java.util.List;
 public class Estandar extends Usuario {
 
     public Estandar(int idInstitucional, String nombre, String apellido, String correoInstitucional, boolean activo) {
-        super(idInstitucional, nombre, apellido, correoInstitucional, activo);
+        super(idInstitucional, nombre, apellido, correoInstitucional, activo, false);
     }
 
     // Los usuarios estandar no manejan salones

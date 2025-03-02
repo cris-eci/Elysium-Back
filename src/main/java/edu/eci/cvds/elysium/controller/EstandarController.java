@@ -1,15 +1,19 @@
 package edu.eci.cvds.elysium.controller;
 
+import java.time.LocalTime;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import edu.eci.cvds.elysium.model.Reserva;
 import edu.eci.cvds.elysium.service.EstandarService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalTime;
 
 @RestController
 @RequestMapping("/api/estandar")
-public class EstandarController {
+public class EstandarController extends UsuarioController {
 
     @Autowired
     private EstandarService estandarService;

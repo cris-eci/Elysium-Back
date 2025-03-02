@@ -50,6 +50,15 @@ public class AdministradorServiceImpl extends UsuarioServiceImpl implements Admi
     }
 
     @Override
+    public void habilitarUsuario(int idInstitucional) {
+        Usuario usuario = usuarioRepository.findById(idInstitucional);
+        if (usuario != null) {
+            usuario.setActivo(true);
+            usuarioRepository.save(usuario);
+        }
+    }
+
+    @Override
     public void agregarUsuario(int idInstitucional, String nombre, String apellido, String correoInstitucional) {
         // Se crean usuarios de tipo Estandar al agregarlos desde un administrador
         Estandar nuevoUsuario = new Estandar(idInstitucional, nombre, apellido, correoInstitucional, true);

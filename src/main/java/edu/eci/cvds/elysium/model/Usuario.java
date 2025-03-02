@@ -3,18 +3,20 @@ package edu.eci.cvds.elysium.model;
 import java.util.List;
 
 public abstract class Usuario {
+    protected boolean isAdmin;
     protected int idInstitucional;
     protected String nombre;
     protected String apellido;
     protected String correoInstitucional;
     protected boolean activo;
 
-    public Usuario(int idInstitucional, String nombre, String apellido, String correoInstitucional, boolean activo) {
+    public Usuario(int idInstitucional, String nombre, String apellido, String correoInstitucional, boolean activo, boolean isAdmin) {
         this.idInstitucional = idInstitucional;
         this.nombre = nombre;
         this.apellido = apellido;
         this.correoInstitucional = correoInstitucional;
         this.activo = activo;
+        this.isAdmin = isAdmin;
     }
     
     // Getters y setters
@@ -60,4 +62,8 @@ public abstract class Usuario {
     
     // Método abstracto que se implementará en Administrador
     public abstract List<Salon> getSalones();
+
+    public void setAdmin(boolean esAdmin) {
+        this.isAdmin = esAdmin;
+    }   
 }

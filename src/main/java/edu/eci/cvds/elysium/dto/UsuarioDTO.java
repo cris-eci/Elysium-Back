@@ -5,13 +5,23 @@ public class UsuarioDTO {
     private String nombre;
     private String apellido;
     private String correo;
+    private boolean isAdmin;
 
-    // Constructor
+    // Constructor usuario estandar
     public UsuarioDTO(int id, String nombre, String apellido, String correo) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
         this.correo = correo;
+    }
+
+    // Constructor usuario estandard con isAdmin
+    public UsuarioDTO(int id, String nombre, String apellido, String correo, boolean isAdmin) {
+        this.id = id;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.correo = correo;
+        this.isAdmin = isAdmin; 
     }
 
     // Getters

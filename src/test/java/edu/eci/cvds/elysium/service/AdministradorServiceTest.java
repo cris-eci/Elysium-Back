@@ -1,16 +1,19 @@
 package edu.eci.cvds.elysium.service;
 
-import edu.eci.cvds.elysium.model.Administrador;
-import edu.eci.cvds.elysium.model.Usuario;
+import java.util.List;
+
 import org.junit.jupiter.api.AfterEach;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import edu.eci.cvds.elysium.model.Administrador;
+import edu.eci.cvds.elysium.model.Usuario;
 
 @SpringBootTest
 public class AdministradorServiceTest {
@@ -31,7 +34,7 @@ public class AdministradorServiceTest {
     public void tearDown(){
         // Eliminamos el administrador de prueba
         if(admin != null){
-            administradorService.deleteUser(admin.getIdInstitucional());
+            //administradorService.deleteUser(admin.getIdInstitucional());
         }
     }
 
@@ -45,7 +48,7 @@ public class AdministradorServiceTest {
         assertEquals("Estandar", u.getNombre(), "El nombre del usuario debe ser 'Estandar'");
         
         // Limpieza
-        administradorService.deleteUser(idInstitucional);
+        //administradorService.deleteUser(idInstitucional);
     }
 
     @Test
@@ -59,7 +62,7 @@ public class AdministradorServiceTest {
         assertEquals("JuanUpdated", u.getNombre(), "El nombre del usuario debe actualizarse");
         
         // Limpieza
-        administradorService.deleteUser(idInstitucional);
+        //administradorService.deleteUser(idInstitucional);
     }
 
     @Test
@@ -72,7 +75,7 @@ public class AdministradorServiceTest {
         assertFalse(u.isActivo(), "El usuario debe estar deshabilitado");
         
         // Limpieza
-        administradorService.deleteUser(idInstitucional);
+        //administradorService.deleteUser(idInstitucional);
     }
 
     @Test
@@ -95,7 +98,7 @@ public class AdministradorServiceTest {
         assertTrue(found1 && found2, "Los usuarios agregados deben estar en la lista");
         
         // Limpieza
-        administradorService.deleteUser(5555);
-        administradorService.deleteUser(6666);
+        //administradorService.deleteUser(5555);
+        //administradorService.deleteUser(6666);
     }
 }

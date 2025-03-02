@@ -25,12 +25,43 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
+    public List<Usuario> consultarUsuariosActivos() {
+        return usuarioRepository.findAllActive();
+    }
+
+    @Override
     public List<Usuario> consultarUsuarios() {
         return usuarioRepository.findAll();
     }
 
     @Override
-    public void deleteUser(int idInstitucional) {
-        usuarioRepository.deleteById(idInstitucional);
+    public List<Usuario> findAllInactive() {
+        return usuarioRepository.findAllInactive();
     }
+
+    @Override
+    public List<Usuario> findAllAdmins() {
+        return usuarioRepository.findAllAdmins();
+    }
+
+    @Override
+    public List<Usuario> findAllActiveAdmins() {
+        return usuarioRepository.findAllActiveAdmins();
+    }
+
+    @Override
+    public List<Usuario> findAllInactiveAdmins() {
+        return usuarioRepository.findAllInactiveAdmins();
+    }
+
+    @Override
+    public List<Usuario> findAllActiveNoAdmins() {
+        return usuarioRepository.findAllActiveNoAdmins();
+    }
+
+    @Override
+    public List<Usuario> findAllInactiveNoAdmins() {
+        return usuarioRepository.findAllInactiveNoAdmins();
+    }
+
 }
