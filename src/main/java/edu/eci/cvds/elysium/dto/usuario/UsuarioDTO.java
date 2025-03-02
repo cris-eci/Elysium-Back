@@ -1,4 +1,4 @@
-package edu.eci.cvds.elysium.dto;
+package edu.eci.cvds.elysium.dto.usuario;
 // DTO para recibir los datos en JSON
 public class UsuarioDTO {
     private int id;

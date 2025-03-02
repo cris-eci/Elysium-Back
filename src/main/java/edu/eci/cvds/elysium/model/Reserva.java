@@ -2,6 +2,8 @@ package edu.eci.cvds.elysium.model;
 
 import java.time.LocalTime;
 
+import edu.eci.cvds.elysium.model.usuario.Usuario;
+
 public class Reserva {
     private LocalTime fechaInicio;
     private String proposito;

@@ -1,7 +1,9 @@
-package edu.eci.cvds.elysium.model;
+package edu.eci.cvds.elysium.model.usuario;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.eci.cvds.elysium.model.Salon;
 
 public class Administrador extends Usuario {
 

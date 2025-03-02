@@ -1,4 +1,4 @@
-package edu.eci.cvds.elysium.controller;
+package edu.eci.cvds.elysium.controller.usuario;
 
 import java.time.LocalTime;
 
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.eci.cvds.elysium.model.Reserva;
-import edu.eci.cvds.elysium.service.EstandarService;
+import edu.eci.cvds.elysium.service.usuario.EstandarService;
 
 @RestController
 @RequestMapping("/api/estandar")

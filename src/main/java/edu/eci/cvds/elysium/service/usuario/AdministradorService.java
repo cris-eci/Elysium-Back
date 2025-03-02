@@ -1,8 +1,8 @@
-package edu.eci.cvds.elysium.service;
+package edu.eci.cvds.elysium.service.usuario;
 
 import java.util.List;
 
-import edu.eci.cvds.elysium.model.Usuario;
+import edu.eci.cvds.elysium.model.usuario.Usuario;
 
 public interface AdministradorService extends UsuarioService {
     List<Usuario> consultarUsuarios();

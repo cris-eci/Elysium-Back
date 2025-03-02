@@ -1,9 +1,11 @@
-package edu.eci.cvds.elysium.model;
+package edu.eci.cvds.elysium.model.usuario;
 
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import edu.eci.cvds.elysium.model.Salon;
 
 
 @Document(collection = "usuarios")

@@ -1,8 +1,11 @@
-package edu.eci.cvds.elysium.model;
+package edu.eci.cvds.elysium.model.usuario;
 
 import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
+
+import edu.eci.cvds.elysium.model.Reserva;
+import edu.eci.cvds.elysium.model.Salon;
 
 public class Estandar extends Usuario {
 

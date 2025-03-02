@@ -1,14 +1,15 @@
-package edu.eci.cvds.elysium.service;
+package edu.eci.cvds.elysium.service.impl.usuario;
 
 import java.time.LocalTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.eci.cvds.elysium.model.Estandar;
 import edu.eci.cvds.elysium.model.Reserva;
-import edu.eci.cvds.elysium.model.Usuario;
+import edu.eci.cvds.elysium.model.usuario.Estandar;
+import edu.eci.cvds.elysium.model.usuario.Usuario;
 import edu.eci.cvds.elysium.repository.UsuarioRepository;
+import edu.eci.cvds.elysium.service.usuario.EstandarService;
 
 @Service
 public class EstandarServiceImpl extends UsuarioServiceImpl implements EstandarService {

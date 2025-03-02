@@ -1,4 +1,4 @@
-package edu.eci.cvds.elysium.controller;
+package edu.eci.cvds.elysium.controller.usuario;
 
 import java.util.List;
 
@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.eci.cvds.elysium.dto.ActualizarUsuarioDTO;
-import edu.eci.cvds.elysium.dto.UsuarioDTO;
-import edu.eci.cvds.elysium.model.Usuario;
-import edu.eci.cvds.elysium.service.AdministradorService;
+import edu.eci.cvds.elysium.dto.usuario.ActualizarUsuarioDTO;
+import edu.eci.cvds.elysium.dto.usuario.UsuarioDTO;
+import edu.eci.cvds.elysium.model.usuario.Usuario;
+import edu.eci.cvds.elysium.service.usuario.AdministradorService;
 
 @RestController
 @RequestMapping("/api/administrador")

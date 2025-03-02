@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-import edu.eci.cvds.elysium.model.Usuario;
+import edu.eci.cvds.elysium.model.usuario.Usuario;
 
 @Repository
 public interface UsuarioRepository extends MongoRepository<Usuario, Integer> {

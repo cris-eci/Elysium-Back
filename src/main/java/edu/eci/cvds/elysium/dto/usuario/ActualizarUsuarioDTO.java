@@ -1,4 +1,4 @@
-package edu.eci.cvds.elysium.dto;
+package edu.eci.cvds.elysium.dto.usuario;
 public class ActualizarUsuarioDTO {
     private int idInstitucional;
     private char tipoCampo;

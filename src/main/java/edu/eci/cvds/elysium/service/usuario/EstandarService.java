@@ -1,4 +1,4 @@
-package edu.eci.cvds.elysium.service;
+package edu.eci.cvds.elysium.service.usuario;
 
 import java.time.LocalTime;
 
