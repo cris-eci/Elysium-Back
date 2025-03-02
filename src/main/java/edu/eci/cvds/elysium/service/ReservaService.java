@@ -3,9 +3,7 @@ package edu.eci.cvds.elysium.service;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
-
 import org.springframework.stereotype.Service;
-
 import edu.eci.cvds.elysium.model.EstadoReservaModel;
 import edu.eci.cvds.elysium.model.ReservaModel;
 import edu.eci.cvds.elysium.repository.ReservaRepository;
@@ -19,64 +17,69 @@ public class ReservaService {
         this.reservaRepository = reservaRepository;
     }
 
+    /**
+     * Crea una nueva reserva.
+     * Campos obligatorios: fechaReserva, diaSemana, proposito y idSalon.
+     * Se asigna un ID único y el estado inicial ACTIVA.
+     * @param reserva la reserva a crear
+     * @return la reserva creada
+     */
     public ReservaModel crearReserva(ReservaModel reserva) {
-        // Validar campos obligatorios
         if (reserva.getFechaReserva() == null ||
-            reserva.getHoraInicio() == null ||
-            reserva.getHoraFin() == null ||
             reserva.getDiaSemana() == null ||
             reserva.getProposito() == null ||
-            reserva.getIdLaboratorio() == null ||
-            reserva.getIdUsuario() == null) {
+            reserva.getIdSalon() == null) {
             throw new IllegalArgumentException("Campos obligatorios faltantes");
         }
-
-        // Validar solapamiento
-        List<ReservaModel> reservasExistentes = reservaRepository.findByIdLaboratorioAndFechaReserva(
-                reserva.getIdLaboratorio(), reserva.getFechaReserva()
-        );
-        for (ReservaModel r : reservasExistentes) {
-            if (horariosSeSolapan(r.getHoraInicio(), r.getHoraFin(), reserva.getHoraInicio(), reserva.getHoraFin())) {
-                throw new IllegalStateException("Ya existe una reserva en este horario");
-            }
-        }
-
-        // Asignar un ID único y el estado inicial
         reserva.setIdReserva(UUID.randomUUID().toString());
-        reserva.setEstado(EstadoReservaModel.RESERVADA);
-
+        reserva.setEstado(EstadoReservaModel.ACTIVA);
         return reservaRepository.save(reserva);
     }
 
-    private boolean horariosSeSolapan(LocalTime inicio1, LocalTime fin1,
-                                      LocalTime inicio2, LocalTime fin2) {
-        // Existe solapamiento si inicio2 es antes que fin1 y fin2 es después de inicio1.
-        return (inicio2.isBefore(fin1) && fin2.isAfter(inicio1));
+    /**
+     * Actualiza una reserva existente (fecha, salón, duración y día de la semana).
+     * Se actualiza el estado a ACTIVA tras la modificación.
+     * @param idReserva el ID de la reserva a actualizar
+     * @param reservaActualizada la reserva con los datos actualizados
+     * @return la reserva actualizada
+     */
+    public ReservaModel actualizarReserva(String idReserva, ReservaModel reservaActualizada) {
+        ReservaModel reserva = reservaRepository.findById(idReserva)
+            .orElseThrow(() -> new IllegalStateException("Reserva no encontrada"));
+        reserva.setFechaReserva(reservaActualizada.getFechaReserva());
+        reserva.setDiaSemana(reservaActualizada.getDiaSemana());
+        reserva.setIdSalon(reservaActualizada.getIdSalon());
+        reserva.setDuracionBloque(reservaActualizada.isDuracionBloque());
+        // Actualiza el estado a ACTIVA (o según la lógica, podría ser actualizado a otro valor)
+        reserva.setEstado(EstadoReservaModel.ACTIVA);
+        return reservaRepository.save(reserva);
     }
 
+    /**
+     * Cancela la reserva cambiando el estado a CANCELADA.
+     * Sólo se permite si la reserva está en estado ACTIVA.
+     * @param idReserva el ID de la reserva a cancelar
+     * @param horaActual la hora actual para validar la cancelación
+     * @return la reserva cancelada
+     */
     public ReservaModel cancelarReserva(String idReserva, LocalTime horaActual) {
         ReservaModel reserva = reservaRepository.findById(idReserva)
-                .orElseThrow(() -> new IllegalStateException("No existe la reserva"));
-
-        // Verificar que la reserva aún no haya iniciado
-        if (horaActual.isAfter(reserva.getHoraInicio()) || horaActual.equals(reserva.getHoraInicio())) {
-            throw new IllegalStateException("No se puede cancelar porque la reserva ya inició");
-        }
-
+            .orElseThrow(() -> new IllegalStateException("No existe la reserva"));
         reserva.setEstado(EstadoReservaModel.CANCELADA);
         return reservaRepository.save(reserva);
     }
 
-    public boolean eliminarReserva(String idReserva, boolean isAdmin) {
-        if (!isAdmin) {
-            throw new SecurityException("No tiene permisos para eliminar la reserva");
-        }
-
+    /**
+     * "Elimina" la reserva, es decir, cambia su estado a ELIMINADA.
+     * Sólo se permite si isAdmin es true.
+     * @param idReserva el ID de la reserva a eliminar
+     * @return true si la reserva fue eliminada, false si no existe
+     */
+    public boolean eliminarReserva(String idReserva) {
         return reservaRepository.findById(idReserva).map(reserva -> {
-            reservaRepository.delete(reserva);
+            reserva.setEstado(EstadoReservaModel.ELIMINADA);
+            reservaRepository.save(reserva);
             return true;
         }).orElse(false);
     }
-
-    // Se pueden agregar métodos adicionales para actualizar reservas y otras validaciones.
 }

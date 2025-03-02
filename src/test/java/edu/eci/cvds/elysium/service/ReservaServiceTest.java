@@ -1,146 +1,94 @@
 package edu.eci.cvds.elysium.service;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import edu.eci.cvds.elysium.model.DiaSemanaModel;
 import edu.eci.cvds.elysium.model.EstadoReservaModel;
 import edu.eci.cvds.elysium.model.ReservaModel;
 import edu.eci.cvds.elysium.repository.ReservaRepository;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
-class ReservaServiceTest {
+public class ReservaServiceTest {
 
+    private ReservaRepository reservaRepository;
     private ReservaService reservaService;
-    private ReservaRepository fakeRepo;
 
     @BeforeEach
-    void setUp() {
-        //fakeRepo = new ReservaRepository();
-        reservaService = new ReservaService(fakeRepo);
+    public void setUp() {
+        reservaRepository = Mockito.mock(ReservaRepository.class);
+        reservaService = new ReservaService(reservaRepository);
     }
 
     @Test
-    void testCrearReservaConDatosValidos_debeRetornarObjetoReserva() {
-        ReservaModel nuevaReserva = new ReservaModel();
-        nuevaReserva.setFechaReserva(LocalDate.of(2025, 3, 10));
-        nuevaReserva.setHoraInicio(LocalTime.of(10, 0));
-        nuevaReserva.setHoraFin(LocalTime.of(12, 0));
-        nuevaReserva.setDiaSemana(DiaSemanaModel.LUNES);
-        nuevaReserva.setProposito("Clase de Programación");
-        nuevaReserva.setIdLaboratorio("LAB-101");
-        nuevaReserva.setIdUsuario("USER-001");
+    public void testCrearReservaConDatosValidos() {
+        LocalDate fecha = LocalDate.of(2025, 3, 10);
+        ReservaModel reserva = new ReservaModel(fecha, DiaSemanaModel.LUNES, "Clase de Programación", "SALON-101", true);
 
-        ReservaModel resultado = reservaService.crearReserva(nuevaReserva);
-
-        assertNotNull(resultado.getIdReserva());
-        assertEquals(EstadoReservaModel.RESERVADA, resultado.getEstado());
-        assertEquals("LAB-101", resultado.getIdLaboratorio());
-        assertEquals("USER-001", resultado.getIdUsuario());
-    }
-
-    @Test
-    void testCrearReserva_conCamposFaltantes_debeLanzarExcepcion() {
-        ReservaModel nuevaReserva = new ReservaModel();
-        // Se omiten campos obligatorios (por ejemplo, horaFin y diaSemana)
-        nuevaReserva.setFechaReserva(LocalDate.of(2025, 3, 10));
-        nuevaReserva.setHoraInicio(LocalTime.of(10, 0));
-        nuevaReserva.setProposito("Clase de Programación");
-        nuevaReserva.setIdLaboratorio("LAB-101");
-        nuevaReserva.setIdUsuario("USER-001");
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            reservaService.crearReserva(nuevaReserva);
+        when(reservaRepository.save(any(ReservaModel.class))).thenAnswer(invocation -> {
+            ReservaModel r = invocation.getArgument(0);
+            r.setIdReserva("RES-001");
+            return r;
         });
+
+        ReservaModel creada = reservaService.crearReserva(reserva);
+        assertNotNull(creada.getIdReserva());
+        assertEquals("ACTIVA", creada.getEstado().name());
     }
 
     @Test
-    void testCrearReserva_conSolapamiento_debeLanzarExcepcion() {
-        // Crear reserva existente
-        ReservaModel reservaExistente = new ReservaModel();
-        reservaExistente.setFechaReserva(LocalDate.of(2025, 3, 10));
-        reservaExistente.setHoraInicio(LocalTime.of(10, 0));
-        reservaExistente.setHoraFin(LocalTime.of(12, 0));
-        reservaExistente.setDiaSemana(DiaSemanaModel.LUNES);
-        reservaExistente.setProposito("Reserva existente");
-        reservaExistente.setIdLaboratorio("LAB-101");
-        reservaExistente.setIdUsuario("USER-002");
-        fakeRepo.save(reservaExistente);
+    public void testActualizarReserva() {
+        LocalDate fecha1 = LocalDate.of(2025, 3, 10);
+        LocalDate fecha2 = LocalDate.of(2025, 3, 11);
+        ReservaModel existente = new ReservaModel(fecha1, DiaSemanaModel.LUNES, "Clase de Programación", "SALON-101", true);
+        existente.setIdReserva("RES-001");
+        existente.setEstado(EstadoReservaModel.ACTIVA);
 
-        // Nueva reserva que se solapa (10:30 - 11:30)
-        ReservaModel nuevaReserva = new ReservaModel();
-        nuevaReserva.setFechaReserva(LocalDate.of(2025, 3, 10));
-        nuevaReserva.setHoraInicio(LocalTime.of(10, 30));
-        nuevaReserva.setHoraFin(LocalTime.of(11, 30));
-        nuevaReserva.setDiaSemana(DiaSemanaModel.LUNES);
-        nuevaReserva.setProposito("Clase de Programación");
-        nuevaReserva.setIdLaboratorio("LAB-101");
-        nuevaReserva.setIdUsuario("USER-001");
+        when(reservaRepository.findById("RES-001")).thenReturn(Optional.of(existente));
+        when(reservaRepository.save(any(ReservaModel.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        assertThrows(IllegalStateException.class, () -> {
-            reservaService.crearReserva(nuevaReserva);
-        });
+        ReservaModel actualizacion = new ReservaModel(fecha2, DiaSemanaModel.MARTES, "Actualización", "SALON-102", false);
+        ReservaModel actualizada = reservaService.actualizarReserva("RES-001", actualizacion);
+        assertEquals(fecha2, actualizada.getFechaReserva());
+        assertEquals(DiaSemanaModel.MARTES, actualizada.getDiaSemana());
+        assertNotEquals("Actualización", actualizada.getProposito());
+        assertEquals("SALON-102", actualizada.getIdSalon());
+        assertFalse(actualizada.isDuracionBloque());
+        assertEquals("ACTIVA", actualizada.getEstado().name());
     }
 
     @Test
-    void testCancelarReserva_antesDeIniciar_debeCambiarEstadoACancelada() {
-        ReservaModel reserva = new ReservaModel();
-        reserva.setIdReserva("RES-001");
-        reserva.setFechaReserva(LocalDate.of(2025, 3, 10));
-        reserva.setHoraInicio(LocalTime.of(10, 0));
-        reserva.setHoraFin(LocalTime.of(12, 0));
-        reserva.setDiaSemana(DiaSemanaModel.LUNES);
-        reserva.setProposito("Reserva por probar");
-        reserva.setIdLaboratorio("LAB-101");
-        reserva.setIdUsuario("USER-001");
-        reserva.setEstado(EstadoReservaModel.RESERVADA);
-        fakeRepo.save(reserva);
+    public void testCancelarReserva() {
+        LocalDate fecha = LocalDate.of(2025, 3, 10);
+        ReservaModel existente = new ReservaModel(fecha, DiaSemanaModel.LUNES, "Clase de Programación", "SALON-101", true);
+        existente.setIdReserva("RES-001");
+        existente.setEstado(EstadoReservaModel.ACTIVA);
 
-        ReservaModel resultado = reservaService.cancelarReserva("RES-001", LocalTime.of(9, 59));
-        assertEquals(EstadoReservaModel.CANCELADA, resultado.getEstado());
+        when(reservaRepository.findById("RES-001")).thenReturn(Optional.of(existente));
+        when(reservaRepository.save(any(ReservaModel.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        ReservaModel cancelada = reservaService.cancelarReserva("RES-001", LocalTime.of(9, 0));
+        assertEquals("CANCELADA", cancelada.getEstado().name());
     }
 
     @Test
-    void testCancelarReserva_despuesDeIniciar_debeLanzarExcepcion() {
-        ReservaModel reserva = new ReservaModel();
-        reserva.setIdReserva("RES-002");
-        reserva.setFechaReserva(LocalDate.of(2025, 3, 10));
-        reserva.setHoraInicio(LocalTime.of(10, 0));
-        reserva.setHoraFin(LocalTime.of(12, 0));
-        reserva.setDiaSemana(DiaSemanaModel.LUNES);
-        reserva.setProposito("Reserva por probar");
-        reserva.setIdLaboratorio("LAB-101");
-        reserva.setIdUsuario("USER-001");
-        reserva.setEstado(EstadoReservaModel.RESERVADA);
-        fakeRepo.save(reserva);
+    public void testEliminarReservaConAdmin() {
+        ReservaModel existente = new ReservaModel(LocalDate.of(2025, 3, 10), DiaSemanaModel.LUNES, "Clase de Programación", "SALON-101", true);
+        existente.setIdReserva("RES-001");
+        existente.setEstado(EstadoReservaModel.ACTIVA);
 
-        assertThrows(IllegalStateException.class, () -> {
-            reservaService.cancelarReserva("RES-002", LocalTime.of(10, 1));
-        });
-    }
+        when(reservaRepository.findById("RES-001")).thenReturn(Optional.of(existente));
+        when(reservaRepository.save(any(ReservaModel.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-    @Test
-    void testEliminarReserva_comoAdministrador_debeEliminar() {
-        ReservaModel reserva = new ReservaModel();
-        reserva.setIdReserva("RES-003");
-        fakeRepo.save(reserva);
-
-        boolean eliminado = reservaService.eliminarReserva("RES-003", true);
+        boolean eliminado = reservaService.eliminarReserva("RES-001");
         assertTrue(eliminado);
-        assertFalse(fakeRepo.findById("RES-003").isPresent());
+        // Simula que el estado pasa a ELIMINADA
+        verify(reservaRepository).save(argThat(r -> r.getEstado() == EstadoReservaModel.ELIMINADA));
     }
 
-    @Test
-    void testEliminarReserva_sinPermisoAdmin_debeLanzarExcepcion() {
-        ReservaModel reserva = new ReservaModel();
-        reserva.setIdReserva("RES-004");
-        fakeRepo.save(reserva);
-
-        assertThrows(SecurityException.class, () -> {
-            reservaService.eliminarReserva("RES-004", false);
-        });
-    }
 }

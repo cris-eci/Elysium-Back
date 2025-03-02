@@ -1,7 +1,8 @@
 package edu.eci.cvds.elysium.model;
 
 public enum EstadoReservaModel {
-    RESERVADA,
+    ACTIVA,
     CANCELADA,
-    FINALIZADA
+    ELIMINADA,
+    VENCIDA
 }

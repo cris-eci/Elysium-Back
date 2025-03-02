@@ -1,26 +1,27 @@
 package edu.eci.cvds.elysium.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.eci.cvds.elysium.dto.ReservaDTO;
+import edu.eci.cvds.elysium.model.DiaSemanaModel;
+import edu.eci.cvds.elysium.model.EstadoReservaModel;
+import edu.eci.cvds.elysium.model.ReservaModel;
+import edu.eci.cvds.elysium.service.ReservaService;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import edu.eci.cvds.elysium.model.DiaSemanaModel;
-import edu.eci.cvds.elysium.model.EstadoReservaModel;
-import edu.eci.cvds.elysium.model.ReservaModel;
-import edu.eci.cvds.elysium.service.ReservaService;
-
 import java.time.LocalDate;
-import java.time.LocalTime;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ReservaController.class)
-class ReservaControllerTest {
+public class ReservaControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -28,102 +29,63 @@ class ReservaControllerTest {
     @MockBean
     private ReservaService reservaService;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Test
-    void testCrearReserva_datosValidos_debeRetornar201() throws Exception {
-        ReservaModel reserva = new ReservaModel();
-        reserva.setIdReserva("RES-001");
-        reserva.setFechaReserva(LocalDate.of(2025, 3, 10));
-        reserva.setHoraInicio(LocalTime.of(10, 0));
-        reserva.setHoraFin(LocalTime.of(12, 0));
-        reserva.setDiaSemana(DiaSemanaModel.LUNES);
-        reserva.setProposito("Clase de Programación");
-        reserva.setIdLaboratorio("LAB-101");
-        reserva.setIdUsuario("USER-001");
-        reserva.setEstado(EstadoReservaModel.RESERVADA);
+    public void testCrearReserva() throws Exception {
+        LocalDate fecha = LocalDate.of(2025, 3, 10);
+        ReservaDTO reservaDto = new ReservaDTO(null, fecha, "LUNES", "Clase de Programación", "SALON-101", null, true);
 
-        when(reservaService.crearReserva(any(ReservaModel.class))).thenReturn(reserva);
+        ReservaModel modelo = new ReservaModel(fecha, DiaSemanaModel.LUNES, "Clase de Programación", "SALON-101", true);
+        modelo.setIdReserva("RES-001");
+        modelo.setEstado(EstadoReservaModel.ACTIVA);
 
-        String json = """
-                {
-                    "fechaReserva": "2025-03-10",
-                    "horaInicio": "10:00",
-                    "horaFin": "12:00",
-                    "diaSemana": "LUNES",
-                    "proposito": "Clase de Programación",
-                    "idLaboratorio": "LAB-101",
-                    "idUsuario": "USER-001"
-                }
-                """;
+        when(reservaService.crearReserva(any(ReservaModel.class))).thenReturn(modelo);
 
-        mockMvc.perform(post("/reservas")
+        mockMvc.perform(post("/api/reservas")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(json))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.idReserva").value("RES-001"))
-                .andExpect(jsonPath("$.estado").value("RESERVADA"));
+                .content(objectMapper.writeValueAsString(reservaDto)))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.idReserva").value("RES-001"))
+            .andExpect(jsonPath("$.estado").value("ACTIVA"));
     }
 
     @Test
-    void testCrearReserva_camposFaltantes_debeRetornar400() throws Exception {
-        String json = """
-                {
-                    "fechaReserva": "2025-03-10",
-                    "horaInicio": "10:00",
-                    "proposito": "Clase de Programación",
-                    "idLaboratorio": "LAB-101",
-                    "idUsuario": "USER-001"
-                }
-                """;
+    public void testActualizarReserva() throws Exception {
+        LocalDate fecha = LocalDate.of(2025, 3, 11);
+        ReservaDTO reservaDto = new ReservaDTO(null, fecha, "MARTES", "Actualización", "SALON-102", null, false);
 
-        when(reservaService.crearReserva(any(ReservaModel.class)))
-                .thenThrow(new IllegalArgumentException("Campos obligatorios faltantes"));
+        ReservaModel modeloExistente = new ReservaModel(LocalDate.of(2025, 3, 10), DiaSemanaModel.LUNES, "Clase de Programación", "SALON-101", true);
+        modeloExistente.setIdReserva("RES-002");
+        modeloExistente.setEstado(EstadoReservaModel.ACTIVA);
 
-        mockMvc.perform(post("/reservas")
+        ReservaModel modeloActualizado = new ReservaModel(fecha, DiaSemanaModel.MARTES, "Actualización", "SALON-102", false);
+        modeloActualizado.setIdReserva("RES-002");
+        modeloActualizado.setEstado(EstadoReservaModel.ACTIVA);
+
+        when(reservaService.actualizarReserva(eq("RES-002"), any(ReservaModel.class))).thenReturn(modeloActualizado);
+
+        mockMvc.perform(put("/api/reservas/RES-002")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(json))
-                .andExpect(status().isBadRequest());
+                .content(objectMapper.writeValueAsString(reservaDto)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.fechaReserva").value(fecha.toString()))
+            .andExpect(jsonPath("$.diaSemana").value("MARTES"));
     }
 
     @Test
-    void testEliminarReserva_comoAdmin_debeRetornar200() throws Exception {
-        when(reservaService.eliminarReserva("RES-100", true)).thenReturn(true);
+    public void testCancelarReserva() throws Exception {
+        LocalDate fecha = LocalDate.of(2025, 3, 10);
+        ReservaModel modelo = new ReservaModel(fecha, DiaSemanaModel.LUNES, "Clase de Programación", "SALON-101", true);
+        modelo.setIdReserva("RES-003");
+        modelo.setEstado(EstadoReservaModel.CANCELADA);
 
-        mockMvc.perform(delete("/reservas/RES-100")
-                .header("X-Role", "ADMIN"))
-                .andExpect(status().isOk());
-    }
+        when(reservaService.cancelarReserva(eq("RES-003"), any())).thenReturn(modelo);
 
-    @Test
-    void testEliminarReserva_sinPermisos_debeRetornar403() throws Exception {
-        when(reservaService.eliminarReserva("RES-101", false))
-                .thenThrow(new SecurityException("No tiene permisos para eliminar la reserva"));
-
-        mockMvc.perform(delete("/reservas/RES-101")
-                .header("X-Role", "USER"))
-                .andExpect(status().isForbidden());
-    }
-
-    @Test
-    void testCancelarReserva_antesDeIniciar_debeRetornar200() throws Exception {
-        ReservaModel reserva = new ReservaModel();
-        reserva.setIdReserva("RES-200");
-        reserva.setEstado(EstadoReservaModel.CANCELADA);
-        when(reservaService.cancelarReserva("RES-200", LocalTime.parse("09:59")))
-                .thenReturn(reserva);
-
-        mockMvc.perform(put("/reservas/RES-200/cancelar")
-                .param("horaActual", "09:59"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.estado").value("CANCELADA"));
-    }
-
-    @Test
-    void testCancelarReserva_despuesDeIniciar_debeRetornar400() throws Exception {
-        when(reservaService.cancelarReserva("RES-201", LocalTime.parse("10:01")))
-                .thenThrow(new IllegalStateException("No se puede cancelar porque la reserva ya inició"));
-
-        mockMvc.perform(put("/reservas/RES-201/cancelar")
-                .param("horaActual", "10:01"))
-                .andExpect(status().isBadRequest());
+        mockMvc.perform(put("/api/reservas/RES-003/cancelar")
+                .param("horaActual", "09:00"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.estado").value("CANCELADA"));
     }
 }

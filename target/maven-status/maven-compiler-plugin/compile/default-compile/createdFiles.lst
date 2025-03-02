@@ -1,3 +1,6 @@
+edu\eci\cvds\elysium\dto\ReservaDTO.class
+edu\eci\cvds\elysium\model\SalonModel.class
+edu\eci\cvds\elysium\repository\FakeReservaRepository.class
 edu\eci\cvds\elysium\model\EstadoReservaModel.class
 edu\eci\cvds\elysium\ElysiumApplication.class
 edu\eci\cvds\elysium\repository\ReservaRepository.class

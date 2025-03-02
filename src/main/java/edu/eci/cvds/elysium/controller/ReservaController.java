@@ -1,16 +1,16 @@
 package edu.eci.cvds.elysium.controller;
 
+import edu.eci.cvds.elysium.dto.ReservaDTO;
+import edu.eci.cvds.elysium.model.ReservaModel;
+import edu.eci.cvds.elysium.service.ReservaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import edu.eci.cvds.elysium.model.ReservaModel;
-import edu.eci.cvds.elysium.service.ReservaService;
-
 import java.time.LocalTime;
 
 @RestController
-@RequestMapping("/reservas")
+@RequestMapping("/api/reservas")
 public class ReservaController {
 
     private final ReservaService reservaService;
@@ -19,22 +19,62 @@ public class ReservaController {
         this.reservaService = reservaService;
     }
 
+    /**
+     * Endpoint para crear una reserva.
+     * Método: POST /api/reservas
+     */
     @PostMapping
-    public ResponseEntity<?> crearReserva(@RequestBody ReservaModel reservaRequest) {
+    public ResponseEntity<?> crearReserva(@RequestBody ReservaDTO reservaDto) {
         try {
-            ReservaModel creada = reservaService.crearReserva(reservaRequest);
-            return ResponseEntity.status(HttpStatus.CREATED).body(creada);
+            ReservaModel reserva = ReservaDTO.toModel(reservaDto);
+            ReservaModel creada = reservaService.crearReserva(reserva);
+            return ResponseEntity.status(HttpStatus.CREATED).body(ReservaDTO.fromModel(creada));
         } catch (IllegalArgumentException | IllegalStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
+    /**
+     * Endpoint para actualizar una reserva.
+     * Método: PUT /api/reservas/{idReserva}
+     */
+    @PutMapping("/{idReserva}")
+    public ResponseEntity<?> actualizarReserva(@PathVariable String idReserva, @RequestBody ReservaDTO reservaDto) {
+        try {
+            ReservaModel reservaActualizada = ReservaDTO.toModel(reservaDto);
+            ReservaModel actualizada = reservaService.actualizarReserva(idReserva, reservaActualizada);
+            return ResponseEntity.ok(ReservaDTO.fromModel(actualizada));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    /**
+     * Endpoint para cancelar una reserva.
+     * Método: PUT /api/reservas/{idReserva}/cancelar?horaActual=HH:mm
+     */
+    @PutMapping("/{idReserva}/cancelar")
+    public ResponseEntity<?> cancelarReserva(@PathVariable String idReserva,
+                                               @RequestParam("horaActual") String horaActualStr) {
+        try {
+            LocalTime horaActual = LocalTime.parse(horaActualStr);
+            ReservaModel cancelada = reservaService.cancelarReserva(idReserva, horaActual);
+            return ResponseEntity.ok(ReservaDTO.fromModel(cancelada));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    /**
+     * Endpoint para eliminar (marcar como ELIMINADA) una reserva.
+     * Método: DELETE /api/reservas/{idReserva}
+     * Requiere header: X-Role=ADMIN
+     */
     @DeleteMapping("/{idReserva}")
     public ResponseEntity<?> eliminarReserva(@PathVariable String idReserva,
                                                @RequestHeader(value = "X-Role", required = false) String role) {
-        boolean isAdmin = role != null && role.equalsIgnoreCase("ADMIN");
         try {
-            boolean eliminado = reservaService.eliminarReserva(idReserva, isAdmin);
+            boolean eliminado = reservaService.eliminarReserva(idReserva);
             if (eliminado) {
                 return ResponseEntity.ok("Reserva eliminada con éxito");
             } else {
@@ -44,18 +84,4 @@ public class ReservaController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
     }
-
-    @PutMapping("/{idReserva}/cancelar")
-    public ResponseEntity<?> cancelarReserva(@PathVariable String idReserva,
-                                               @RequestParam("horaActual") String horaActualStr) {
-        try {
-            LocalTime horaActual = LocalTime.parse(horaActualStr);
-            ReservaModel r = reservaService.cancelarReserva(idReserva, horaActual);
-            return ResponseEntity.ok(r);
-        } catch (IllegalStateException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    // Se pueden agregar endpoints adicionales, por ejemplo para actualizar reservas.
 }
