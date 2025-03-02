@@ -2,9 +2,15 @@ package edu.eci.cvds.elysium.model;
 
 import java.util.List;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+
+@Document(collection = "usuarios")
 public abstract class Usuario {
-    protected boolean isAdmin;
+    @Id
     protected int idInstitucional;
+    protected boolean isAdmin;
     protected String nombre;
     protected String apellido;
     protected String correoInstitucional;
