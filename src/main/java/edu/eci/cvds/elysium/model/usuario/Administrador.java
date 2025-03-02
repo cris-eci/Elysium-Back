@@ -38,9 +38,9 @@ public class Administrador extends Usuario {
         }
     }
 
-    // Método para añadir un salón
-    public void añadirSalon(String nombre, String ubicacion, int capacidad) {
-        Salon salon = new Salon(nombre, ubicacion, capacidad);
-        this.salones.add(salon);
-    }
+    // // Método para añadir un salón
+    // public void añadirSalon(String nombre, String ubicacion, int capacidad) {
+    //     Salon salon = new Salon(nombre, ubicacion, capacidad);
+    //     this.salones.add(salon);
+    // }
 }

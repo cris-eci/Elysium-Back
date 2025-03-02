@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
 
 public class Salon {
-    private String nombre;
+    //We declare mnemonico as the id of the salon
+    @Id
     private String mnemonico;
+    private String nombre;
     private String ubicacion;
     private int capacidad;
     private List<ObjectId> recursos;
