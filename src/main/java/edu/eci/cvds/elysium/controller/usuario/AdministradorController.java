@@ -25,44 +25,49 @@ public class AdministradorController extends UsuarioController{
     @Autowired
     private AdministradorService administradorService;
 
-    @GetMapping("/")
-    public List<Usuario> consultarUsuarios() {
-        return administradorService.consultarUsuarios();
-    }
-
-    @GetMapping("/activos")
-    public List<Usuario> consultarUsuariosActivos() {
-        return administradorService.consultarUsuariosActivos();
-    }
-
-    @GetMapping("/inactivos")
-    public List<Usuario> findAllInactive() {
-        return administradorService.consultarUsuariosInactivos();
-    }
-
-    @GetMapping("/admins")
-    public List<Usuario> findAllAdmins() {
-        return administradorService.consultarUsuariosAdmins();
-    }
-
-    @GetMapping("/adminsActivos")
-    public List<Usuario> findAllActiveAdmins() {
-        return administradorService.consultarUsuariosActiveAdmins();
-    }
-
-    @GetMapping("/adminsInactivos")
-    public List<Usuario> findAllInactiveAdmins() {
-        return administradorService.consultarUsuariosInactiveAdmins();
-    }
-
-    @GetMapping("/noAdminsActivos")
-    public List<Usuario> findAllActiveNoAdmins() {
-        return administradorService.consultarUsuariosActiveNoAdmins();
-    }
-
-    @GetMapping("/noAdminsInactivos")
-    public List<Usuario> findAllInactiveNoAdmins() {
-        return administradorService.consultarUsuariosInactiveNoAdmins();
+        /**
+     * Endpoint unificado para consultar usuarios.
+     * Se pueden usar los parámetros opcionales:
+     *   - activo: true/false para filtrar por estado activo.
+     *   - isAdmin: true/false para filtrar por rol de administrador.
+     * 
+     * Ejemplos:
+     *   GET /api/users           -> retorna todos los usuarios.
+     *   GET /api/users?activo=true           -> usuarios activos.
+     *   GET /api/users?activo=false          -> usuarios inactivos.
+     *   GET /api/users?isAdmin=true          -> usuarios que son administradores.
+     *   GET /api/users?activo=true&isAdmin=false  -> usuarios activos que no son administradores.
+     */
+    @GetMapping("")
+    public List<Usuario> consultarUsuarios(
+            @RequestParam(required = false) Boolean activo,
+            @RequestParam(required = false) Boolean isAdmin) {
+        // Si no se pasan filtros, retorna todos
+        if (activo == null && isAdmin == null) {
+            return administradorService.consultarUsuarios();
+        }
+        // Si se filtra solo por estado activo/inactivo
+        if (activo != null && isAdmin == null) {
+            return activo
+                    ? administradorService.consultarUsuariosActivos()
+                    : administradorService.consultarUsuariosInactivos();
+        }
+        // Si se filtra solo por rol
+        if (activo == null && isAdmin != null) {
+            return isAdmin
+                    ? administradorService.consultarUsuariosAdmins()
+                    : administradorService.consultarUsuariosActiveNoAdmins(); // O se pueden combinar activos e inactivos
+        }
+        // Si se filtran ambos
+        if (activo && isAdmin) {
+            return administradorService.consultarUsuariosActiveAdmins();
+        } else if (activo && !isAdmin) {
+            return administradorService.consultarUsuariosActiveNoAdmins();
+        } else if (!activo && isAdmin) {
+            return administradorService.consultarUsuariosInactiveAdmins();
+        } else { // !activo && !isAdmin
+            return administradorService.consultarUsuariosInactiveNoAdmins();
+        }
     }
 
     @PostMapping("/agregarUsuario")
