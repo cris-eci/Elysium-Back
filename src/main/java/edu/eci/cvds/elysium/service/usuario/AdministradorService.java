@@ -18,5 +18,5 @@ public interface AdministradorService extends UsuarioService {
     void habilitarUsuario(int idInstitucional);
     void deshabilitarUsuario(int idInstitucional);
     void hacerAdmin(int id);
-    void añadirSalon(int adminId, String nombre, String ubicacion, int capacidad);
+    // void añadirSalon(int adminId, String nombre, String ubicacion, int capacidad);
 }

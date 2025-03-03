@@ -17,16 +17,17 @@ public class Salon {
     private boolean disponible;
     private boolean activo;
 
-    public Salon(String nombre, String mnemonico, String ubicacion, int capacidad, List<ObjectId> recursos) {
+    public Salon(String nombre, String mnemonico, String ubicacion, int capacidad) {
         this.nombre = nombre;
         this.mnemonico = mnemonico;
         this.ubicacion = ubicacion;
         this.capacidad = capacidad;
-        this.recursos = recursos;
+        this.recursos = new ArrayList<ObjectId>();
         // The first time that it is created, it is available
         this.disponible = true;
         // The first time that it is created, it is active
         this.activo = true;
+
     }
 
     // Getters y setters

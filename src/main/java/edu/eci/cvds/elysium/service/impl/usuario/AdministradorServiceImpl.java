@@ -115,15 +115,15 @@ public class AdministradorServiceImpl extends UsuarioServiceImpl implements Admi
         }
     }
 
-    @Override
-    public void añadirSalon(int adminId, String nombre, String ubicacion, int capacidad) {
-        Usuario usuario = usuarioRepository.findByIdInstitucional(adminId);
-        if (usuario != null && usuario instanceof Administrador) {
-            Administrador admin = (Administrador) usuario;
-            admin.añadirSalon(nombre, ubicacion, capacidad);
-            usuarioRepository.save(admin);
-        }
-    }
+    // @Override
+    // public void añadirSalon(int adminId, String nombre, String ubicacion, int capacidad) {
+    //     Usuario usuario = usuarioRepository.findByIdInstitucional(adminId);
+    //     if (usuario != null && usuario instanceof Administrador) {
+    //         Administrador admin = (Administrador) usuario;
+    //         admin.añadirSalon(nombre, ubicacion, capacidad);
+    //         usuarioRepository.save(admin);
+    //     }
+    // }
 
     @Override
     public void hacerAdmin(int id) {
