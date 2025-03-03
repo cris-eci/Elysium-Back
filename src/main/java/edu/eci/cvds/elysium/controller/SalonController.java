@@ -18,19 +18,76 @@ public class SalonController {
     @Autowired
     private SalonService salonService;
 
-    // Consulta todos los salones
+    /**
+     * Retrieves a list of Salones based on various optional filtering criteria.
+     * 
+     * This endpoint supports multiple filters that can be combined to refine the search results.
+     * The possible filter combinations include:
+     * - activo and disponible
+     * - activo
+     * - disponible
+     * - nombre and ubicacion
+     * - nombre
+     * - ubicacion
+     * - capacidadMin
+     * - capacidadMax
+     * 
+     * There are at least 32 possible filter combinations.
+     * 
+     * @param activo Optional Boolean filter to retrieve salones based on their active status.
+     * @param disponible Optional Boolean filter to retrieve salones based on their availability status.
+     * @param nombre Optional String filter to retrieve salones based on their name.
+     * @param ubicacion Optional String filter to retrieve salones based on their location.
+     * @param capacidadMin Optional Integer filter to retrieve salones with a minimum capacity.
+     * @param capacidadMax Optional Integer filter to retrieve salones with a maximum capacity.
+     * @return ResponseEntity containing a list of Salones that match the provided filters.
+     */
     @GetMapping("")
-    public ResponseEntity<List<Salon>> getAllSalones() {
-        List<Salon> salones = salonService.findAll();
+    public ResponseEntity<List<Salon>> getSalones(
+            @RequestParam(required = false) Boolean activo,
+            @RequestParam(required = false) Boolean disponible,
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) String ubicacion,
+            @RequestParam(required = false) Integer capacidadMin,
+            @RequestParam(required = false) Integer capacidadMax) {
+        List<Salon> salones;
+
+        if (activo != null && disponible != null) {
+            if (activo && disponible) {
+                salones = salonService.findByActivoTrueAndDisponibleTrue();
+            } else if (activo && !disponible) {
+                salones = salonService.findByActivoTrueAndDisponibleFalse();
+            } else if (!activo && disponible) {
+                salones = salonService.findByActivoFalseAndDisponibleTrue();
+            } else {
+                salones = salonService.findByActivoFalseAndDisponibleFalse();
+            }
+        } else if (activo != null) {
+            salones = activo ? salonService.findByActivoTrue() : salonService.findByActivoFalse();
+        } else if (disponible != null) {
+            salones = disponible ? salonService.findByDisponibleTrue() : salonService.findByDisponibleFalse();
+        } else if (nombre != null && ubicacion != null) {
+            salones = salonService.findByNombreAndUbicacionContainingIgnoreCase(nombre, ubicacion);
+        } else if (nombre != null) {
+            salones = salonService.findByNombreContainingIgnoreCase(nombre);
+        } else if (ubicacion != null) {
+            salones = salonService.findByUbicacionContainingIgnoreCase(ubicacion);
+        } else if (capacidadMin != null) {
+            salones = salonService.findByCapacidadGreaterThanEqual(capacidadMin);
+        } else if (capacidadMax != null) {
+            salones = salonService.findByCapacidadLessThanEqual(capacidadMax);
+        } else {
+            salones = salonService.findAll();
+        }
         return ResponseEntity.ok(salones);
     }
 
-    // Consulta un salón específico por su mnemonico
-    @GetMapping("/{mnemonico}")
-    public ResponseEntity<Salon> getSalonByMnemonico(@PathVariable String mnemonico) {
-        Salon salon = salonService.findByMnemonico(mnemonico);
-        return salon != null ? ResponseEntity.ok(salon) : ResponseEntity.notFound().build();
-    }
+    // // Consulta un salón específico por su mnemonico
+    // @GetMapping("/{mnemonico}")
+    // public ResponseEntity<Salon> getSalonByMnemonico(@PathVariable String mnemonico) {
+    //     Salon salon = salonService.findByMnemonico(mnemonico);
+    //     return salon != null ? ResponseEntity.ok(salon) : ResponseEntity.notFound().build();
+    // }
 
     // Agregar un nuevo salón
     @PostMapping("")
@@ -41,9 +98,8 @@ public class SalonController {
                 salonRequest.getNombre(),
                 salonRequest.getMnemonico(),
                 salonRequest.getUbicacion(),
-                salonRequest.getCapacidad()
-        );
-        
+                salonRequest.getCapacidad());
+
         return ResponseEntity.ok().build();
     }
 
@@ -61,7 +117,7 @@ public class SalonController {
         return ResponseEntity.noContent().build();
     }
 
-    // Actualizar el nombre del salón
+    // Actualizzar el nombre del salón
     @PutMapping("/{mnemonico}/actualizarNombre")
     public ResponseEntity<Void> actualizarNombre(@RequestBody ActualizarSalonDTO actualizarSalonDTO) {
         salonService.actualizarNombre(actualizarSalonDTO.getMnemonico(), actualizarSalonDTO.getValor());
@@ -82,12 +138,12 @@ public class SalonController {
         return ResponseEntity.noContent().build();
     }
 
-    // Consultar el estado 'activo' del salón
-    @GetMapping("/{mnemonico}/activo")
-    public ResponseEntity<Boolean> getActivo(@PathVariable String mnemonico) {
-        boolean activo = salonService.getActivo(mnemonico);
-        return ResponseEntity.ok(activo);
-    }
+    // // Consultar el estado 'activo' del salón
+    // @GetMapping("/{mnemonico}/activo")
+    // public ResponseEntity<Boolean> getActivo(@PathVariable String mnemonico) {
+    //     boolean activo = salonService.getActivo(mnemonico);
+    //     return ResponseEntity.ok(activo);
+    // }
 
     // Consultar el estado 'disponible' del salón
     @GetMapping("/{mnemonico}/disponible")

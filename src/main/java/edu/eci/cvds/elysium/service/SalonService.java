@@ -22,6 +22,10 @@ public interface SalonService {
     List<Salon> findByActivoTrueAndDisponibleTrue();
     
     List<Salon> findByActivoTrueAndDisponibleFalse();
+
+    List<Salon> findByActivoFalseAndDisponibleTrue();
+
+    List<Salon> findByActivoFalseAndDisponibleFalse();
     
     List<Salon> findByNombreContainingIgnoreCase(String nombre);
     
@@ -30,6 +34,8 @@ public interface SalonService {
     List<Salon> findByCapacidadGreaterThanEqual(int capacidad);
     
     List<Salon> findByCapacidadLessThanEqual(int capacidad);
+
+    List<Salon> findByNombreAndUbicacionContainingIgnoreCase(String nombre, String ubicacion);
 
     void agregarSalon(String nombre, String mnemonico, String ubicacion, int capacidad);
     void deshabilitarSalon(String mnemonico);

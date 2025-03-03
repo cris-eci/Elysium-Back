@@ -33,4 +33,10 @@ public interface SalonRepository extends MongoRepository<Salon, String> {
     List<Salon> findByCapacidadGreaterThanEqual(int capacidad);
     
     List<Salon> findByCapacidadLessThanEqual(int capacidad);
+    
+    List<Salon> findByActivoFalseAndDisponibleTrue();
+    
+    List<Salon> findByActivoFalseAndDisponibleFalse();
+    
+    List<Salon> findByNombreAndUbicacionContainingIgnoreCase(String nombre, String ubicacion);
 }

@@ -16,62 +16,77 @@ public class SalonServiceImpl implements SalonService {
     @Override
     public Salon findByMnemonico(String mnemonico) {
         return salonRepository.findByMnemonico(mnemonico);
-    }
+        }
 
-    @Override
-    public List<Salon> findAll() {
+        @Override
+        public List<Salon> findAll() {
         return salonRepository.findAll();
-    }
+        }
 
-    @Override
-    public List<Salon> findByActivoTrue() {
+        @Override
+        public List<Salon> findByActivoTrue() {
         return salonRepository.findByActivoTrue();
-    }
+        }
 
-    @Override
-    public List<Salon> findByActivoFalse() {
+        @Override
+        public List<Salon> findByActivoFalse() {
         return salonRepository.findByActivoFalse();
-    }
+        }
 
-    @Override
-    public List<Salon> findByDisponibleTrue() {
+        @Override
+        public List<Salon> findByDisponibleTrue() {
         return salonRepository.findByDisponibleTrue();
-    }
+        }
 
-    @Override
-    public List<Salon> findByDisponibleFalse() {
+        @Override
+        public List<Salon> findByDisponibleFalse() {
         return salonRepository.findByDisponibleFalse();
-    }
+        }
 
-    @Override
-    public List<Salon> findByActivoTrueAndDisponibleTrue() {
+        @Override
+        public List<Salon> findByActivoTrueAndDisponibleTrue() {
         return salonRepository.findByActivoTrueAndDisponibleTrue();
-    }
+        }
 
-    @Override
-    public List<Salon> findByActivoTrueAndDisponibleFalse() {
+        @Override
+        public List<Salon> findByActivoTrueAndDisponibleFalse() {
         return salonRepository.findByActivoTrueAndDisponibleFalse();
-    }
+        }
 
-    @Override
-    public List<Salon> findByNombreContainingIgnoreCase(String nombre) {
+        @Override
+        public List<Salon> findByActivoFalseAndDisponibleTrue() {
+        return salonRepository.findByActivoFalseAndDisponibleTrue();
+        }
+
+        @Override
+        public List<Salon> findByActivoFalseAndDisponibleFalse() {
+        return salonRepository.findByActivoFalseAndDisponibleFalse();
+        }
+
+        @Override
+        public List<Salon> findByNombreContainingIgnoreCase(String nombre) {
         return salonRepository.findByNombreContainingIgnoreCase(nombre);
-    }
+        }
 
-    @Override
-    public List<Salon> findByUbicacionContainingIgnoreCase(String ubicacion) {
+        @Override
+        public List<Salon> findByUbicacionContainingIgnoreCase(String ubicacion) {
         return salonRepository.findByUbicacionContainingIgnoreCase(ubicacion);
-    }
+        }
 
-    @Override
-    public List<Salon> findByCapacidadGreaterThanEqual(int capacidad) {
+        @Override
+        public List<Salon> findByCapacidadGreaterThanEqual(int capacidad) {
         return salonRepository.findByCapacidadGreaterThanEqual(capacidad);
-    }
+        }
 
-    @Override
-    public List<Salon> findByCapacidadLessThanEqual(int capacidad) {
+        @Override
+        public List<Salon> findByCapacidadLessThanEqual(int capacidad) {
         return salonRepository.findByCapacidadLessThanEqual(capacidad);
-    }
+        }
+
+        @Override
+        public List<Salon> findByNombreAndUbicacionContainingIgnoreCase(String nombre, String ubicacion) {
+        return salonRepository.findByNombreAndUbicacionContainingIgnoreCase(nombre, ubicacion);
+        }
 
     /**
      * Agrega y persiste un nuevo salón.

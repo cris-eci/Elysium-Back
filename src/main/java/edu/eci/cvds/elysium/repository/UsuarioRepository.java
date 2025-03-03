@@ -25,7 +25,7 @@ public interface UsuarioRepository extends MongoRepository<Usuario, Integer> {
     // Retorna todos los usuarios que son administradores
     List<Usuario> findByIsAdminTrue();
 
-    // Retorna todos los usuarios que NO son administradores
+    // Retorna todos los usuarios que NO son admi   nistradores
     List<Usuario> findByIsAdminFalse();
 
     // Usuarios activos que son administradores
