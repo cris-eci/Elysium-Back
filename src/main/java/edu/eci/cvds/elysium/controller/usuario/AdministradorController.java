@@ -25,42 +25,42 @@ public class AdministradorController extends UsuarioController{
     @Autowired
     private AdministradorService administradorService;
 
-    @GetMapping("/consultarUsuarios")
+    @GetMapping("/")
     public List<Usuario> consultarUsuarios() {
         return administradorService.consultarUsuarios();
     }
 
-    @GetMapping("/consultarUsuariosActivos")
+    @GetMapping("/activos")
     public List<Usuario> consultarUsuariosActivos() {
         return administradorService.consultarUsuariosActivos();
     }
 
-    @GetMapping("/consultarUsuariosInactivos")
+    @GetMapping("/inactivos")
     public List<Usuario> findAllInactive() {
         return administradorService.consultarUsuariosInactivos();
     }
 
-    @GetMapping("/consultarAdmins")
+    @GetMapping("/admins")
     public List<Usuario> findAllAdmins() {
         return administradorService.consultarUsuariosAdmins();
     }
 
-    @GetMapping("/consultarAdminsActivos")
+    @GetMapping("/adminsActivos")
     public List<Usuario> findAllActiveAdmins() {
         return administradorService.consultarUsuariosActiveAdmins();
     }
 
-    @GetMapping("/consultarAdminsInactivos")
+    @GetMapping("/adminsInactivos")
     public List<Usuario> findAllInactiveAdmins() {
         return administradorService.consultarUsuariosInactiveAdmins();
     }
 
-    @GetMapping("/consultarNoAdminsActivos")
+    @GetMapping("/noAdminsActivos")
     public List<Usuario> findAllActiveNoAdmins() {
         return administradorService.consultarUsuariosActiveNoAdmins();
     }
 
-    @GetMapping("/consultarNoAdminsInactivos")
+    @GetMapping("/noAdminsInactivos")
     public List<Usuario> findAllInactiveNoAdmins() {
         return administradorService.consultarUsuariosInactiveNoAdmins();
     }
@@ -95,12 +95,12 @@ public class AdministradorController extends UsuarioController{
     }   
 
 
-    // ----------
-    @PostMapping("/añadirSalon")
-    public void añadirSalon(@RequestParam int adminId,
-            @RequestParam String nombre,
-            @RequestParam String ubicacion,
-            @RequestParam int capacidad) {
-        administradorService.añadirSalon(adminId, nombre, ubicacion, capacidad);
-    }
+    // // ----------
+    // @PostMapping("/añadirSalon")
+    // public void añadirSalon(@RequestParam int adminId,
+    //         @RequestParam String nombre,
+    //         @RequestParam String ubicacion,
+    //         @RequestParam int capacidad) {
+    //     administradorService.añadirSalon(adminId, nombre, ubicacion, capacidad);
+    // }
 }
