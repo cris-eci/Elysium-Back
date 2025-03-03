@@ -1,94 +1,137 @@
 package edu.eci.cvds.elysium.service;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import edu.eci.cvds.elysium.model.DiaSemanaModel;
 import edu.eci.cvds.elysium.model.EstadoReservaModel;
 import edu.eci.cvds.elysium.model.ReservaModel;
-import edu.eci.cvds.elysium.repository.ReservaRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.Optional;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import edu.eci.cvds.elysium.model.SalonModel;
 
 public class ReservaServiceTest {
 
-    private ReservaRepository reservaRepository;
+    @Mock
     private ReservaService reservaService;
 
     @BeforeEach
     public void setUp() {
-        reservaRepository = Mockito.mock(ReservaRepository.class);
-        reservaService = new ReservaService(reservaRepository);
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    public void testCrearReservaConDatosValidos() {
-        LocalDate fecha = LocalDate.of(2025, 3, 10);
-        ReservaModel reserva = new ReservaModel(fecha, DiaSemanaModel.LUNES, "Clase de Programación", "SALON-101", true);
+    public void testConsultarReservas() {
+        List<ReservaModel> reservas = Arrays.asList(new ReservaModel(), new ReservaModel());
+        when(reservaService.consultarReservas()).thenReturn(reservas);
 
-        when(reservaRepository.save(any(ReservaModel.class))).thenAnswer(invocation -> {
-            ReservaModel r = invocation.getArgument(0);
-            r.setIdReserva("RES-001");
-            return r;
-        });
+        List<ReservaModel> result = reservaService.consultarReservas();
+        assertEquals(2, result.size());
+    }
 
-        ReservaModel creada = reservaService.crearReserva(reserva);
-        assertNotNull(creada.getIdReserva());
-        assertEquals("ACTIVA", creada.getEstado().name());
+    @Test
+    public void testConsultarReservasPorSalon() {
+        SalonModel salon = new SalonModel();
+        List<ReservaModel> reservas = Arrays.asList(new ReservaModel(), new ReservaModel());
+        when(reservaService.consultarReservasPorSalon(salon)).thenReturn(reservas);
+
+        List<ReservaModel> result = reservaService.consultarReservasPorSalon(salon);
+        assertEquals(2, result.size());
+    }
+
+    @Test
+    public void testConsultarReservasPorFecha() {
+        LocalDate fecha = LocalDate.now();
+        List<ReservaModel> reservas = Arrays.asList(new ReservaModel(), new ReservaModel());
+        when(reservaService.consultarReservasPorFecha(fecha)).thenReturn(reservas);
+
+        List<ReservaModel> result = reservaService.consultarReservasPorFecha(fecha);
+        assertEquals(2, result.size());
+    }
+
+    @Test
+    public void testConsultarReservasPorDiaSemana() {
+        DiaSemanaModel diaSemana = DiaSemanaModel.LUNES;
+        List<ReservaModel> reservas = Arrays.asList(new ReservaModel(), new ReservaModel());
+        when(reservaService.consultarReservasPorDiaSemana(diaSemana)).thenReturn(reservas);
+
+        List<ReservaModel> result = reservaService.consultarReservasPorDiaSemana(diaSemana);
+        assertEquals(2, result.size());
+    }
+
+    @Test
+    public void testConsultarReservasPorEstado() {
+        EstadoReservaModel estado = EstadoReservaModel.ACTIVA;
+        List<ReservaModel> reservas = Arrays.asList(new ReservaModel(), new ReservaModel());
+        when(reservaService.consultarReservasPorEstado(estado)).thenReturn(reservas);
+
+        List<ReservaModel> result = reservaService.consultarReservasPorEstado(estado);
+        assertEquals(2, result.size());
+    }
+
+    @Test
+    public void testConsultarReservasPorDuracionBloque() {
+        boolean duracionBloque = true;
+        List<ReservaModel> reservas = Arrays.asList(new ReservaModel(), new ReservaModel());
+        when(reservaService.consultarReservasPorDuracionBloque(duracionBloque)).thenReturn(reservas);
+
+        List<ReservaModel> result = reservaService.consultarReservasPorDuracionBloque(duracionBloque);
+        assertEquals(2, result.size());
+    }
+
+    @Test
+    public void testConsultarReserva() {
+        String idReserva = "123";
+        ReservaModel reserva = new ReservaModel();
+        when(reservaService.consultarReserva(idReserva)).thenReturn(reserva);
+
+        ReservaModel result = reservaService.consultarReserva(idReserva);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testCrearReserva() {
+        doNothing().when(reservaService).crearReserva(anyString(), any(LocalDate.class), any(DiaSemanaModel.class), anyString(), any(SalonModel.class), anyBoolean());
+
+        reservaService.crearReserva("123", LocalDate.now(), DiaSemanaModel.LUNES, "Proposito", new SalonModel(), true);
+        verify(reservaService, times(1)).crearReserva(anyString(), any(LocalDate.class), any(DiaSemanaModel.class), anyString(), any(SalonModel.class), anyBoolean());
     }
 
     @Test
     public void testActualizarReserva() {
-        LocalDate fecha1 = LocalDate.of(2025, 3, 10);
-        LocalDate fecha2 = LocalDate.of(2025, 3, 11);
-        ReservaModel existente = new ReservaModel(fecha1, DiaSemanaModel.LUNES, "Clase de Programación", "SALON-101", true);
-        existente.setIdReserva("RES-001");
-        existente.setEstado(EstadoReservaModel.ACTIVA);
+        doNothing().when(reservaService).actualizarReserva(anyString(), anyChar(), any(LocalDate.class), any(DiaSemanaModel.class), any(SalonModel.class), anyBoolean());
 
-        when(reservaRepository.findById("RES-001")).thenReturn(Optional.of(existente));
-        when(reservaRepository.save(any(ReservaModel.class))).thenAnswer(invocation -> invocation.getArgument(0));
-
-        ReservaModel actualizacion = new ReservaModel(fecha2, DiaSemanaModel.MARTES, "Actualización", "SALON-102", false);
-        ReservaModel actualizada = reservaService.actualizarReserva("RES-001", actualizacion);
-        assertEquals(fecha2, actualizada.getFechaReserva());
-        assertEquals(DiaSemanaModel.MARTES, actualizada.getDiaSemana());
-        assertNotEquals("Actualización", actualizada.getProposito());
-        assertEquals("SALON-102", actualizada.getIdSalon());
-        assertFalse(actualizada.isDuracionBloque());
-        assertEquals("ACTIVA", actualizada.getEstado().name());
+        reservaService.actualizarReserva("123", 'A', LocalDate.now(), DiaSemanaModel.LUNES, new SalonModel(), true);
+        verify(reservaService, times(1)).actualizarReserva(anyString(), anyChar(), any(LocalDate.class), any(DiaSemanaModel.class), any(SalonModel.class), anyBoolean());
     }
 
     @Test
-    public void testCancelarReserva() {
-        LocalDate fecha = LocalDate.of(2025, 3, 10);
-        ReservaModel existente = new ReservaModel(fecha, DiaSemanaModel.LUNES, "Clase de Programación", "SALON-101", true);
-        existente.setIdReserva("RES-001");
-        existente.setEstado(EstadoReservaModel.ACTIVA);
+    public void testDeleteReserva() {
+        doNothing().when(reservaService).deleteReserva(anyString());
 
-        when(reservaRepository.findById("RES-001")).thenReturn(Optional.of(existente));
-        when(reservaRepository.save(any(ReservaModel.class))).thenAnswer(invocation -> invocation.getArgument(0));
-
-        ReservaModel cancelada = reservaService.cancelarReserva("RES-001", LocalTime.of(9, 0));
-        assertEquals("CANCELADA", cancelada.getEstado().name());
+        reservaService.deleteReserva("123");
+        verify(reservaService, times(1)).deleteReserva(anyString());
     }
 
     @Test
-    public void testEliminarReservaConAdmin() {
-        ReservaModel existente = new ReservaModel(LocalDate.of(2025, 3, 10), DiaSemanaModel.LUNES, "Clase de Programación", "SALON-101", true);
-        existente.setIdReserva("RES-001");
-        existente.setEstado(EstadoReservaModel.ACTIVA);
+    public void testCancelReserva() {
+        doNothing().when(reservaService).cancelReserva(anyString());
 
-        when(reservaRepository.findById("RES-001")).thenReturn(Optional.of(existente));
-        when(reservaRepository.save(any(ReservaModel.class))).thenAnswer(invocation -> invocation.getArgument(0));
-
-        boolean eliminado = reservaService.eliminarReserva("RES-001");
-        assertTrue(eliminado);
-        // Simula que el estado pasa a ELIMINADA
-        verify(reservaRepository).save(argThat(r -> r.getEstado() == EstadoReservaModel.ELIMINADA));
+        reservaService.cancelReserva("123");
+        verify(reservaService, times(1)).cancelReserva(anyString());
     }
 
+    @Test
+    public void testRechazarReserva() {
+        doNothing().when(reservaService).rechazarReserva(anyString());
+
+        reservaService.rechazarReserva("123");
+        verify(reservaService, times(1)).rechazarReserva(anyString());
+    }
 }

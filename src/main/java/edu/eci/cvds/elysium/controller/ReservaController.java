@@ -1,87 +1,94 @@
 package edu.eci.cvds.elysium.controller;
 
-import edu.eci.cvds.elysium.dto.ReservaDTO;
+import edu.eci.cvds.elysium.model.DiaSemanaModel;
+import edu.eci.cvds.elysium.model.EstadoReservaModel;
 import edu.eci.cvds.elysium.model.ReservaModel;
+import edu.eci.cvds.elysium.model.SalonModel;
 import edu.eci.cvds.elysium.service.ReservaService;
-import org.springframework.http.HttpStatus;
+import edu.eci.cvds.elysium.dto.ReservaDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalTime;
+import java.time.LocalDate;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 @RestController
-@RequestMapping("/api/reservas")
+@RequestMapping("/api/reserva")
 public class ReservaController {
 
-    private final ReservaService reservaService;
+    @Autowired
+    private ReservaService reservaService;
 
-    public ReservaController(ReservaService reservaService) {
-        this.reservaService = reservaService;
+    @GetMapping("/consultarReservas")
+    public List<ReservaModel> consultarReservas() {
+        return reservaService.consultarReservas();
+    }
+    
+    @GetMapping("/consultarReservasPorSalon")
+    public List<ReservaModel> consultarReservasPorSalon(@RequestParam SalonModel idSalon) {
+        return reservaService.consultarReservasPorSalon(idSalon);
     }
 
-    /**
-     * Endpoint para crear una reserva.
-     * Método: POST /api/reservas
-     */
-    @PostMapping
-    public ResponseEntity<?> crearReserva(@RequestBody ReservaDTO reservaDto) {
-        try {
-            ReservaModel reserva = ReservaDTO.toModel(reservaDto);
-            ReservaModel creada = reservaService.crearReserva(reserva);
-            return ResponseEntity.status(HttpStatus.CREATED).body(ReservaDTO.fromModel(creada));
-        } catch (IllegalArgumentException | IllegalStateException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    @GetMapping("/consultarReservasPorFecha")
+    public List<ReservaModel> consultarReservasPorFecha(@RequestParam LocalDate fecha) {
+        return reservaService.consultarReservasPorFecha(fecha);
     }
 
-    /**
-     * Endpoint para actualizar una reserva.
-     * Método: PUT /api/reservas/{idReserva}
-     */
-    @PutMapping("/{idReserva}")
-    public ResponseEntity<?> actualizarReserva(@PathVariable String idReserva, @RequestBody ReservaDTO reservaDto) {
-        try {
-            ReservaModel reservaActualizada = ReservaDTO.toModel(reservaDto);
-            ReservaModel actualizada = reservaService.actualizarReserva(idReserva, reservaActualizada);
-            return ResponseEntity.ok(ReservaDTO.fromModel(actualizada));
-        } catch (IllegalStateException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    @GetMapping("/consultarReservasPorDiaSemana")
+    public List<ReservaModel> consultarReservasPorDiaSemana(@RequestParam DiaSemanaModel diaSemana) {
+        return reservaService.consultarReservasPorDiaSemana(diaSemana);
     }
 
-    /**
-     * Endpoint para cancelar una reserva.
-     * Método: PUT /api/reservas/{idReserva}/cancelar?horaActual=HH:mm
-     */
-    @PutMapping("/{idReserva}/cancelar")
-    public ResponseEntity<?> cancelarReserva(@PathVariable String idReserva,
-                                               @RequestParam("horaActual") String horaActualStr) {
-        try {
-            LocalTime horaActual = LocalTime.parse(horaActualStr);
-            ReservaModel cancelada = reservaService.cancelarReserva(idReserva, horaActual);
-            return ResponseEntity.ok(ReservaDTO.fromModel(cancelada));
-        } catch (IllegalStateException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    @GetMapping("/consultarReservasPorEstado")
+    public List<ReservaModel> consultarReservasPorEstado(@RequestParam EstadoReservaModel estado) {
+        return reservaService.consultarReservasPorEstado(estado);
     }
 
-    /**
-     * Endpoint para eliminar (marcar como ELIMINADA) una reserva.
-     * Método: DELETE /api/reservas/{idReserva}
-     * Requiere header: X-Role=ADMIN
-     */
-    @DeleteMapping("/{idReserva}")
-    public ResponseEntity<?> eliminarReserva(@PathVariable String idReserva,
-                                               @RequestHeader(value = "X-Role", required = false) String role) {
-        try {
-            boolean eliminado = reservaService.eliminarReserva(idReserva);
-            if (eliminado) {
-                return ResponseEntity.ok("Reserva eliminada con éxito");
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Reserva no encontrada");
-            }
-        } catch (SecurityException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-        }
+    @GetMapping("/consultarReservasPorDuracionBloque")
+    public List<ReservaModel> consultarReservasPorDuracionBloque(@RequestParam boolean duracionBloque) {
+        return reservaService.consultarReservasPorDuracionBloque(duracionBloque);
     }
+
+    @GetMapping("/consultarReserva")
+    public ReservaModel consultarReserva(@RequestParam String idReserva) {
+        return reservaService.consultarReserva(idReserva);
+    }
+
+    @PostMapping("/crearReserva")
+    public void crearReserva(@RequestBody ReservaDTO reservaDTO ) {
+        reservaService.crearReserva(reservaDTO.getIdReserva(), reservaDTO.getFechaReserva(), reservaDTO.getDiaSemana(), reservaDTO.getProposito(), reservaDTO.getIdSalon(), reservaDTO.isDuracionBloque());
+    }
+
+    // @PutMapping("/actualizarReserva")
+    // public void actualizarReserva(@RequestBody ReservaDTO reservaDTO) {
+    //     reservaService.actualizarReserva(reservaDTO.getIdReserva(), reservaDTO.getTipoCampo(), reservaDTO.getValue1(), reservaDTO.getValue2(), reservaDTO.getValue3(), reservaDTO.getValue4());
+    // }
+
+    @PutMapping("{idReserva}/deleteReserva")
+    public ResponseEntity<String> deleteReserva(@PathVariable String idReserva) {
+        return ResponseEntity.ok("Reserva eliminada");
+    }
+
+    @PutMapping("{idReserva}/cancelReserva")
+    public ResponseEntity<String> cancelReserva(@PathVariable String idReserva) {
+        reservaService.cancelReserva(idReserva);
+        return ResponseEntity.ok("Reserva cancelada");
+    }
+    
+    @PutMapping("{idReserva}/rechazarReserva")
+    public ResponseEntity<String> rechazarReserva(@PathVariable String idReserva) {
+        reservaService.rechazarReserva(idReserva);
+        return ResponseEntity.ok("Reserva rechazada");
+    }
+
 }

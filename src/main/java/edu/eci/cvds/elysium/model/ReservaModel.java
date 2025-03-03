@@ -4,7 +4,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 /**
  * Represents a reservation model for the "reservas" collection.
@@ -17,7 +16,7 @@ public class ReservaModel {
     private LocalDate fechaReserva;
     private DiaSemanaModel diaSemana;
     private String proposito;
-    private String salon;
+    private SalonModel salon;
     private EstadoReservaModel estado;
     private boolean duracionBloque;
 
@@ -30,17 +29,20 @@ public class ReservaModel {
     /**
      * Constructor to create a new ReservaModel instance.
      *
+     * @param idReserva      the reservation ID
      * @param fechaReserva   the date of the reservation
      * @param diaSemana      the day of the week of the reservation
      * @param proposito      the purpose of the reservation
      * @param salon          the salon associated with the reservation
      * @param duracionBloque the duration block of the reservation
      */
-    public ReservaModel(LocalDate fechaReserva, DiaSemanaModel diaSemana, String proposito, String salon, boolean duracionBloque) {
+    public ReservaModel(String idReserva,LocalDate fechaReserva, DiaSemanaModel diaSemana, String proposito, SalonModel salon,boolean duracionBloque) {
+        this.idReserva = idReserva;
         this.fechaReserva = fechaReserva;
         this.diaSemana = diaSemana;
         this.proposito = proposito;
         this.salon = salon;
+        //this.estado = estado;
         this.duracionBloque = duracionBloque;
     }
 
@@ -121,7 +123,7 @@ public class ReservaModel {
      *
      * @return the salon ID
      */
-    public String getIdSalon() {
+    public SalonModel getIdSalon() {
         return salon;
     }
 
@@ -130,7 +132,7 @@ public class ReservaModel {
      *
      * @param idSalon the salon ID
      */
-    public void setIdSalon(String idSalon) {
+    public void setIdSalon(SalonModel idSalon) {
         this.salon = idSalon;
     }
 
@@ -169,4 +171,82 @@ public class ReservaModel {
     public void setDuracionBloque(boolean duracionBloque) {
         this.duracionBloque = duracionBloque;
     }
+
+    /**
+     * Creates a new reservation.
+     *
+     * @param idReserva    the reservation ID
+     * @param fechaReserva the date of the reservation
+     * @param diaSemana    the day of the week of the reservation
+     * @param proposito    the purpose of the reservation
+     * @param salon        the salon associated with the reservation
+     * @param estado       the state of the reservation
+     * @param duracionBloque the duration block of the reservation
+     * @return the new reservation
+     */
+    public ReservaModel crearReserva(String idReserva, LocalDate fechaReserva, DiaSemanaModel diaSemana, String proposito, SalonModel salon, boolean duracionBloque) {
+        this.estado = EstadoReservaModel.ACTIVA;
+        return new ReservaModel(idReserva, fechaReserva, diaSemana, proposito, salon, duracionBloque);
+    }
+    /**
+     * Updates the reservation with the new data.
+     * @param idInstitucional the reservation ID
+     * @param tipoCampo the field type to update
+     * @param value1 the new value
+     * @param value2 the new value
+     * @param value3 the new value
+     * @param value4 the new value
+     */
+    public void actualizar(String idReserva, char tipoCampo, LocalDate value1,DiaSemanaModel value2,SalonModel value3,boolean value4) {
+        if(this.idReserva.equals(idReserva)) {
+            switch(tipoCampo) {
+                case 'f': //fecha
+                    this.fechaReserva = value1;
+                    break;
+                case 'd': //día
+                    this.diaSemana = value2;
+                    break;
+                case 's': //salón
+                    this.salon = value3;
+                    break;
+                case 'b': //bloque
+                    this.duracionBloque = value4;
+                    break;
+                default:
+                    break;
+            }
+        }
+        this.estado = EstadoReservaModel.ACTIVA;
+    }
+
+    /**
+     * Deletes the reservation.
+     * @param idReserva the reservation ID
+     */
+    public void deleteReserva(String idReserva) {
+        if(this.idReserva.equals(idReserva)) {
+            this.estado = EstadoReservaModel.ELIMINADA;
+        }
+    }
+
+    /**
+     * Cancels the reservation.
+     * @param idReserva the reservation ID
+     */
+    public void cancelReserva(String idReserva) {
+        if(this.idReserva.equals(idReserva)) {
+            this.estado = EstadoReservaModel.CANCELADA;
+        }
+    }
+
+    /**
+     * Accepts the reservation.
+     * @param idReserva the reservation ID
+     */
+    public void rechazarReserva(String idReserva) {
+        if(this.idReserva.equals(idReserva)) {
+            this.estado = EstadoReservaModel.RECHAZADA;
+        }
+    }
 }
+

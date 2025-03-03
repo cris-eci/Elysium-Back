@@ -1,39 +1,44 @@
 package edu.eci.cvds.elysium.dto;
 
-import edu.eci.cvds.elysium.model.DiaSemanaModel;
-import edu.eci.cvds.elysium.model.EstadoReservaModel;
-import edu.eci.cvds.elysium.model.ReservaModel;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.time.LocalDate;
-import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+
+import edu.eci.cvds.elysium.model.DiaSemanaModel;
+import edu.eci.cvds.elysium.model.SalonModel;
 
 public class ReservaDTOTest {
 
     @Test
-    public void testConversionModelToDTOAndBack() {
-        LocalDate fecha = LocalDate.of(2025, 3, 10);
-        ReservaModel modelo = new ReservaModel(fecha, DiaSemanaModel.LUNES, "Clase de Programación", "SALON-101", true);
-        modelo.setIdReserva("RES-001");
-        modelo.setEstado(EstadoReservaModel.ACTIVA);
+    public void testDefaultConstructor() {
+        ReservaDTO reserva = new ReservaDTO();
+        assertEquals(null, reserva.getIdReserva());
+        assertEquals(null, reserva.getFechaReserva());
+        assertEquals(null, reserva.getDiaSemana());
+        assertEquals(null, reserva.getProposito());
+        assertEquals(null, reserva.getIdSalon());
+        assertEquals(false, reserva.isDuracionBloque());
+    }
 
-        // Convertir modelo a DTO
-        ReservaDTO dto = ReservaDTO.fromModel(modelo);
-        assertEquals("RES-001", dto.getIdReserva());
-        assertEquals(fecha, dto.getFechaReserva());
-        assertEquals("LUNES", dto.getDiaSemana());
-        assertEquals("Clase de Programación", dto.getProposito());
-        assertEquals("SALON-101", dto.getIdSalon());
-        assertEquals("ACTIVA", dto.getEstado());
-        assertTrue(dto.isDuracionBloque());
+    @Test
+    public void testParameterizedConstructor() {
+        String idReserva = "123";
+        LocalDate fechaReserva = LocalDate.now();
+        DiaSemanaModel diaSemana = DiaSemanaModel.LUNES;
+        String proposito = "Meeting";
+        SalonModel idSalon = new SalonModel();
+        boolean duracionBloque = true;
 
-        // Convertir DTO de vuelta a modelo
-        ReservaModel modelo2 = ReservaDTO.toModel(dto);
-        assertEquals("RES-001", modelo2.getIdReserva());
-        assertEquals(fecha, modelo2.getFechaReserva());
-        assertEquals(DiaSemanaModel.LUNES, modelo2.getDiaSemana());
-        assertEquals("Clase de Programación", modelo2.getProposito());
-        assertEquals("SALON-101", modelo2.getIdSalon());
-        assertEquals(EstadoReservaModel.ACTIVA, modelo2.getEstado());
-        assertTrue(modelo2.isDuracionBloque());
+        ReservaDTO reserva = new ReservaDTO(idReserva, fechaReserva, diaSemana, proposito, idSalon, duracionBloque);
+
+        assertEquals(idReserva, reserva.getIdReserva());
+        assertEquals(fechaReserva, reserva.getFechaReserva());
+        assertEquals(diaSemana, reserva.getDiaSemana());
+        assertEquals(proposito, reserva.getProposito());
+        assertEquals(idSalon, reserva.getIdSalon());
+        assertTrue(reserva.isDuracionBloque());
     }
 }

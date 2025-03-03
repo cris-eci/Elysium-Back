@@ -3,8 +3,21 @@ package edu.eci.cvds.elysium.repository;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import edu.eci.cvds.elysium.model.ReservaModel;
+import org.springframework.stereotype.Repository;
 
+import edu.eci.cvds.elysium.model.DiaSemanaModel;
+import edu.eci.cvds.elysium.model.EstadoReservaModel;
+import edu.eci.cvds.elysium.model.ReservaModel;
+import edu.eci.cvds.elysium.model.SalonModel;
+
+@Repository
 public interface ReservaRepository extends MongoRepository<ReservaModel, String> {
-    List<ReservaModel> findByIdSalonAndFechaReserva(String idSalon, LocalDate fechaReserva);
+    ReservaModel findByIdReserva(String idReserva);
+    @SuppressWarnings("null")
+    List<ReservaModel> findAll();
+    List<ReservaModel> findByIdSalon(SalonModel idSalon);
+    List<ReservaModel> findByFechaReserva(LocalDate fechaReserva);
+    List<ReservaModel> findByDiaSemana(DiaSemanaModel diaSemana);
+    List<ReservaModel> findByDuracionBloque(boolean duracionBloque);
+    List<ReservaModel> findByEstado(EstadoReservaModel estado);
 }
