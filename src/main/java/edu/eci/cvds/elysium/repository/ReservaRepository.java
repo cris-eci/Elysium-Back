@@ -8,14 +8,13 @@ import org.springframework.stereotype.Repository;
 import edu.eci.cvds.elysium.model.DiaSemanaModel;
 import edu.eci.cvds.elysium.model.EstadoReservaModel;
 import edu.eci.cvds.elysium.model.ReservaModel;
-import edu.eci.cvds.elysium.model.SalonModel;
+
 
 @Repository
 public interface ReservaRepository extends MongoRepository<ReservaModel, String> {
     ReservaModel findByIdReserva(String idReserva);
-    @SuppressWarnings("null")
     List<ReservaModel> findAll();
-    List<ReservaModel> findByIdSalon(SalonModel idSalon);
+    List<ReservaModel> findByIdSalon(String idSalon);
     List<ReservaModel> findByFechaReserva(LocalDate fechaReserva);
     List<ReservaModel> findByDiaSemana(DiaSemanaModel diaSemana);
     List<ReservaModel> findByDuracionBloque(boolean duracionBloque);

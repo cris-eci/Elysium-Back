@@ -16,7 +16,7 @@ public class ReservaModel {
     private LocalDate fechaReserva;
     private DiaSemanaModel diaSemana;
     private String proposito;
-    private SalonModel salon;
+    private String idSalon;
     private EstadoReservaModel estado;
     private boolean duracionBloque;
 
@@ -33,16 +33,16 @@ public class ReservaModel {
      * @param fechaReserva   the date of the reservation
      * @param diaSemana      the day of the week of the reservation
      * @param proposito      the purpose of the reservation
-     * @param salon          the salon associated with the reservation
+     * @param idSalon          the salon associated with the reservation
      * @param duracionBloque the duration block of the reservation
      */
-    public ReservaModel(String idReserva,LocalDate fechaReserva, DiaSemanaModel diaSemana, String proposito, SalonModel salon,boolean duracionBloque) {
+    public ReservaModel(String idReserva,LocalDate fechaReserva, DiaSemanaModel diaSemana, String proposito, String idSalon,boolean duracionBloque) {
         this.idReserva = idReserva;
         this.fechaReserva = fechaReserva;
         this.diaSemana = diaSemana;
         this.proposito = proposito;
-        this.salon = salon;
-        //this.estado = estado;
+        this.idSalon = idSalon;
+        this.estado = EstadoReservaModel.ACTIVA;
         this.duracionBloque = duracionBloque;
     }
 
@@ -123,8 +123,8 @@ public class ReservaModel {
      *
      * @return the salon ID
      */
-    public SalonModel getIdSalon() {
-        return salon;
+    public String getIdSalon() {
+        return idSalon;
     }
 
     /**
@@ -132,8 +132,8 @@ public class ReservaModel {
      *
      * @param idSalon the salon ID
      */
-    public void setIdSalon(SalonModel idSalon) {
-        this.salon = idSalon;
+    public void setIdSalon(String idSalon) {
+        this.idSalon = idSalon;
     }
 
     /**
@@ -179,14 +179,14 @@ public class ReservaModel {
      * @param fechaReserva the date of the reservation
      * @param diaSemana    the day of the week of the reservation
      * @param proposito    the purpose of the reservation
-     * @param salon        the salon associated with the reservation
+     * @param idSalon        the salon associated with the reservation
      * @param estado       the state of the reservation
      * @param duracionBloque the duration block of the reservation
      * @return the new reservation
      */
-    public ReservaModel crearReserva(String idReserva, LocalDate fechaReserva, DiaSemanaModel diaSemana, String proposito, SalonModel salon, boolean duracionBloque) {
+    public ReservaModel crearReserva(String idReserva, LocalDate fechaReserva, DiaSemanaModel diaSemana, String proposito, String idSalon,boolean duracionBloque) {
         this.estado = EstadoReservaModel.ACTIVA;
-        return new ReservaModel(idReserva, fechaReserva, diaSemana, proposito, salon, duracionBloque);
+        return new ReservaModel(idReserva, fechaReserva, diaSemana, proposito, idSalon, duracionBloque);
     }
     /**
      * Updates the reservation with the new data.
@@ -197,7 +197,7 @@ public class ReservaModel {
      * @param value3 the new value
      * @param value4 the new value
      */
-    public void actualizar(String idReserva, char tipoCampo, LocalDate value1,DiaSemanaModel value2,SalonModel value3,boolean value4) {
+    public void actualizar(String idReserva, char tipoCampo, LocalDate value1,DiaSemanaModel value2,String value3,boolean value4) {
         if(this.idReserva.equals(idReserva)) {
             switch(tipoCampo) {
                 case 'f': //fecha
@@ -207,7 +207,7 @@ public class ReservaModel {
                     this.diaSemana = value2;
                     break;
                 case 's': //salón
-                    this.salon = value3;
+                    this.idSalon = value3;
                     break;
                 case 'b': //bloque
                     this.duracionBloque = value4;

@@ -3,6 +3,7 @@ package edu.eci.cvds.elysium.dto;
 import java.time.LocalDate;
 import edu.eci.cvds.elysium.model.DiaSemanaModel;
 import edu.eci.cvds.elysium.model.SalonModel;
+import edu.eci.cvds.elysium.model.EstadoReservaModel;
 
 public class ReservaDTO {
     
@@ -14,7 +15,8 @@ public class ReservaDTO {
     private String proposito;
 
     // Se utiliza el objeto Salón para identificar el salón (1..1)
-    private SalonModel idSalon;
+    private String idSalon;
+
     
     // true: reserva de bloque; false: reserva corta
     private boolean duracionBloque;
@@ -34,7 +36,7 @@ public class ReservaDTO {
      * @param idSalon
      * @param duracionBloque
      */
-    public ReservaDTO(String idReserva, LocalDate fechaReserva, DiaSemanaModel diaSemana, String proposito, SalonModel idSalon, boolean duracionBloque) {
+    public ReservaDTO(String idReserva, LocalDate fechaReserva, DiaSemanaModel diaSemana, String proposito, String idSalon, boolean duracionBloque) {
         this.idReserva = idReserva;
         this.fechaReserva = fechaReserva;
         this.diaSemana = diaSemana;
@@ -48,7 +50,7 @@ public class ReservaDTO {
     public LocalDate getFechaReserva() {return fechaReserva;}
     public DiaSemanaModel getDiaSemana() {return diaSemana;}
     public String getProposito() {return proposito;}
-    public SalonModel getIdSalon() {return idSalon;}
+    public String getIdSalon() {return idSalon;}
     public boolean isDuracionBloque() {return duracionBloque;}
 
 }

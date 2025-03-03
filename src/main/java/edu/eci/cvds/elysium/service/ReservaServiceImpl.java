@@ -22,8 +22,8 @@ public class ReservaServiceImpl implements ReservaService {
     }
 
     @Override
-    public List<ReservaModel> consultarReservasPorSalon(SalonModel salon) {
-        return reservaRepository.findByIdSalon(salon);
+    public List<ReservaModel> consultarReservasPorSalon(String idSalon) {
+        return reservaRepository.findByIdSalon(idSalon);
     }
 
     @Override
@@ -51,13 +51,17 @@ public class ReservaServiceImpl implements ReservaService {
         return reservaRepository.findByIdReserva(idReserva);
     }
 
-    public void crearReserva(String idReserva, LocalDate fechaReserva, DiaSemanaModel diaSemana,String proposito, SalonModel salon,boolean duracionBloque) {
-        ReservaModel reserva = new ReservaModel(idReserva, fechaReserva, diaSemana, proposito, salon, duracionBloque);
-        reserva.crearReserva(idReserva, fechaReserva, diaSemana, proposito, salon, duracionBloque);
+    @Override
+    public void crearReserva(String idReserva, LocalDate fechaReserva, DiaSemanaModel diaSemana,String proposito, String idSalon,boolean duracionBloque) {
+        ReservaModel reserva = new ReservaModel(idReserva, fechaReserva, diaSemana, proposito, idSalon, duracionBloque);
+        reserva.crearReserva(idReserva, fechaReserva, diaSemana, proposito, idSalon, duracionBloque);
+        EstadoReservaModel estado = EstadoReservaModel.ACTIVA;
+        reserva.setEstado(estado);
         reservaRepository.save(reserva);
     }
+
     @Override
-    public void actualizarReserva(String idReserva, char tipoCampo, LocalDate value1, DiaSemanaModel value2, SalonModel value3, boolean value4) {
+    public void actualizarReserva(String idReserva, char tipoCampo, LocalDate value1, DiaSemanaModel value2, String value3, boolean value4) {
         ReservaModel reserva = reservaRepository.findByIdReserva(idReserva);
         if (reserva != null) {
             reserva.actualizar(idReserva, tipoCampo, value1, value2, value3, value4);
@@ -86,6 +90,8 @@ public class ReservaServiceImpl implements ReservaService {
         ReservaModel reserva = reservaRepository.findByIdReserva(idReserva);
         if (reserva != null) {
             reserva.deleteReserva(idReserva);
+            EstadoReservaModel estado = EstadoReservaModel.ELIMINADA;
+            reserva.setEstado(estado);
             reservaRepository.save(reserva);
         }
     }
@@ -95,7 +101,10 @@ public class ReservaServiceImpl implements ReservaService {
         ReservaModel reserva = reservaRepository.findByIdReserva(idReserva);
         if (reserva != null) {
             reserva.cancelReserva(idReserva);
+            EstadoReservaModel estado = EstadoReservaModel.CANCELADA;
+            reserva.setEstado(estado);
             reservaRepository.save(reserva);
+
         }
     }
 
@@ -104,6 +113,8 @@ public class ReservaServiceImpl implements ReservaService {
         ReservaModel reserva = reservaRepository.findByIdReserva(idReserva);
         if (reserva != null) {
             reserva.rechazarReserva(idReserva);
+            EstadoReservaModel estado = EstadoReservaModel.RECHAZADA;
+            reserva.setEstado(estado);
             reservaRepository.save(reserva);
         }
     }
