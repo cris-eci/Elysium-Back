@@ -1,113 +1,110 @@
 package edu.eci.cvds.elysium.controller;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.mockito.Mock;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-
+import edu.eci.cvds.elysium.dto.RecursoDTO;
 import edu.eci.cvds.elysium.model.RecursoModel;
 import edu.eci.cvds.elysium.service.RecursoService;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.ResponseEntity;
 import java.util.Arrays;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import java.util.List;
+import java.util.UUID;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
-@WebMvcTest(RecursoController.class)
-class RecursoControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+public class RecursoControllerTest {
 
     @Mock
     private RecursoService recursoService;
 
-    @Test
-    void testCrearRecurso_datosValidos_debeRetornar201() throws Exception {
-        RecursoModel recurso = new RecursoModel("REC-001", "Computadores MAC", 10,
-                Arrays.asList("Sistema: macOS", "Almacenamiento: 256GB"));
-        when(recursoService.crearRecurso(any(RecursoModel.class))).thenReturn(recurso);
+    @InjectMocks
+    private RecursoController recursoController;
 
-        String json = """
-            {
-                "nombre": "Computadores MAC",
-                "cantidad": 10,
-                "especificaciones": ["Sistema: macOS", "Almacenamiento: 256GB"]
-            }
-            """;
-
-        mockMvc.perform(post("/recursos")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value("REC-001"))
-                .andExpect(jsonPath("$.nombre").value("Computadores MAC"));
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void testActualizarRecurso_comoAdmin_debeRetornar200() throws Exception {
-        RecursoModel recursoActualizado = new RecursoModel("REC-002", "Computadores Windows", 15,
-                Arrays.asList("Sistema: Windows", "Almacenamiento: 512GB"));
-        when(recursoService.actualizarRecurso(eq("REC-002"), any(RecursoModel.class), eq(true)))
-                .thenReturn(recursoActualizado);
+    public void testConsultarRecursos() {
+        List<RecursoModel> recursos = Arrays.asList(new RecursoModel(), new RecursoModel());
+        when(recursoService.consultarRecursos()).thenReturn(recursos);
 
-        String json = """
-            {
-                "nombre": "Computadores Windows",
-                "cantidad": 15,
-                "especificaciones": ["Sistema: Windows", "Almacenamiento: 512GB"]
-            }
-            """;
-
-        mockMvc.perform(put("/recursos/REC-002")
-                .header("X-Role", "ADMIN")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.nombre").value("Computadores Windows"))
-                .andExpect(jsonPath("$.cantidad").value(15));
+        List<RecursoModel> result = recursoController.consultarRecursos();
+        assertEquals(recursos, result);
+        verify(recursoService, times(1)).consultarRecursos();
     }
 
     @Test
-    void testActualizarRecurso_sinPermiso_debeRetornar403() throws Exception {
-        when(recursoService.actualizarRecurso(eq("REC-003"), any(RecursoModel.class), eq(false)))
-                .thenThrow(new SecurityException("No tiene permisos para actualizar el recurso"));
+    public void testConsultarNombre() {
+        String nombre = "Recurso1";
+        List<RecursoModel> recursos = Arrays.asList(new RecursoModel(), new RecursoModel());
+        when(recursoService.consultarNombre(nombre)).thenReturn(recursos);
 
-        String json = """
-            {
-                "nombre": "Computadores Windows",
-                "cantidad": 15,
-                "especificaciones": ["Sistema: Windows", "Almacenamiento: 512GB"]
-            }
-            """;
-
-        mockMvc.perform(put("/recursos/REC-003")
-                .header("X-Role", "USER")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json))
-                .andExpect(status().isForbidden());
+        List<RecursoModel> result = recursoController.consultarNombre(nombre);
+        assertEquals(recursos, result);
+        verify(recursoService, times(1)).consultarNombre(nombre);
     }
 
     @Test
-    void testEliminarRecurso_comoAdmin_debeRetornar200() throws Exception {
-        when(recursoService.eliminarRecurso("REC-004", true)).thenReturn(true);
+    public void testConsultarCantidad() {
+        int cantidad = 10;
+        List<RecursoModel> recursos = Arrays.asList(new RecursoModel(), new RecursoModel());
+        when(recursoService.consultarCantidad(cantidad)).thenReturn(recursos);
 
-        mockMvc.perform(delete("/recursos/REC-004")
-                .header("X-Role", "ADMIN"))
-                .andExpect(status().isOk());
+        List<RecursoModel> result = recursoController.consultarCantidad(cantidad);
+        assertEquals(recursos, result);
+        verify(recursoService, times(1)).consultarCantidad(cantidad);
     }
 
     @Test
-    void testEliminarRecurso_sinPermiso_debeRetornar403() throws Exception {
-        when(recursoService.eliminarRecurso("REC-005", false))
-                .thenThrow(new SecurityException("No tiene permisos para eliminar el recurso"));
+    public void testConsultarEspecificaciones() {
+        List<String> especificaciones = Arrays.asList("Especificacion1", "Especificacion2");
+        List<RecursoModel> recursos = Arrays.asList(new RecursoModel(), new RecursoModel());
+        when(recursoService.consultarEspecificaciones(especificaciones)).thenReturn(recursos);
 
-        mockMvc.perform(delete("/recursos/REC-005")
-                .header("X-Role", "USER"))
-                .andExpect(status().isForbidden());
+        List<RecursoModel> result = recursoController.consultarEspecificaciones(especificaciones);
+        assertEquals(recursos, result);
+        verify(recursoService, times(1)).consultarEspecificaciones(especificaciones);
+    }
+
+    @Test
+    public void testConsultarRecurso() {
+        UUID id = UUID.randomUUID();
+        RecursoModel recurso = new RecursoModel();
+        when(recursoService.consultarRecurso(id)).thenReturn(recurso);
+
+        RecursoModel result = recursoController.consultarRecurso(id);
+        assertEquals(recurso, result);
+        verify(recursoService, times(1)).consultarRecurso(id);
+    }
+
+    @Test
+    public void testAgregarRecurso() {
+        RecursoDTO recursoDTO = new RecursoDTO("Recurso1", 10, Arrays.asList("Especificacion1", "Especificacion2"));
+
+        recursoController.agregarRecurso(recursoDTO);
+        verify(recursoService, times(1)).agregarRecurso(recursoDTO.getNombre(), recursoDTO.getCantidad(), recursoDTO.getEspecificaciones());
+    }
+
+    @Test
+    public void testActualizarRecurso() {
+        RecursoDTO recursoDTO = new RecursoDTO("Recurso1", 10, Arrays.asList("Especificacion1", "Especificacion2"));
+
+        recursoController.actualizarRecurso(recursoDTO);
+        verify(recursoService, times(1)).actualizarRecurso(recursoDTO.getNombre(), recursoDTO.getCantidad(), recursoDTO.getEspecificaciones());
+    }
+
+    @Test
+    public void testEliminarRecurso() {
+        UUID id = UUID.randomUUID();
+
+        ResponseEntity<String> response = recursoController.eliminarRecurso(id);
+        assertEquals(ResponseEntity.ok("Recurso eliminado"), response);
+        verify(recursoService, times(1)).eliminarRecurso(id);
     }
 }

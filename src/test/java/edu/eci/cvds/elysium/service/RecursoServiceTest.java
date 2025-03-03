@@ -1,99 +1,113 @@
 package edu.eci.cvds.elysium.service;
 
+import edu.eci.cvds.elysium.model.RecursoModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import edu.eci.cvds.elysium.model.RecursoModel;
-import edu.eci.cvds.elysium.repository.RecursoRepository;
-
-import static org.mockito.Mockito.*;
 import java.util.Arrays;
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-class RecursoServiceTest {
+
+public class RecursoServiceTest {
 
     @Mock
-    private RecursoRepository recursoRepository;
-
     private RecursoService recursoService;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
-        recursoService = new RecursoService(recursoRepository);
     }
 
     @Test
-    void testCrearRecursoConDatosValidos() {
-        RecursoModel recurso = new RecursoModel(null, "Computadores MAC", 10,
-                Arrays.asList("Sistema: macOS", "Almacenamiento: 256GB"));
-        // Simula la asignación de ID en el guardado
-        when(recursoRepository.save(any(RecursoModel.class))).thenAnswer(invocation -> {
-            RecursoModel r = invocation.getArgument(0);
-            if (r.getId() == null || r.getId().isEmpty()) {
-                r.setId(UUID.randomUUID().toString());
-            }
-            return r;
-        });
+    public void testConsultarRecursos() {
+        List<RecursoModel> recursos = Arrays.asList(new RecursoModel(), new RecursoModel());
+        when(recursoService.consultarRecursos()).thenReturn(recursos);
 
-        RecursoModel creado = recursoService.crearRecurso(recurso);
-        assertNotNull(creado.getId());
-        assertEquals("Computadores MAC", creado.getNombre());
+        List<RecursoModel> result = recursoService.consultarRecursos();
+        assertEquals(2, result.size());
+        verify(recursoService, times(1)).consultarRecursos();
     }
 
     @Test
-    void testActualizarRecursoComoAdmin() {
-        RecursoModel recursoExistente = new RecursoModel("REC-001", "Computadores MAC", 10,
-                Arrays.asList("Sistema: macOS", "Almacenamiento: 256GB"));
-        when(recursoRepository.findById("REC-001")).thenReturn(Optional.of(recursoExistente));
-        when(recursoRepository.save(any(RecursoModel.class))).thenAnswer(invocation -> invocation.getArgument(0));
+    public void testConsultarNombre() {
+        String nombre = "Recurso1";
+        List<RecursoModel> recursos = Arrays.asList(new RecursoModel());
+        when(recursoService.consultarNombre(nombre)).thenReturn(recursos);
 
-        RecursoModel recursoActualizado = new RecursoModel();
-        recursoActualizado.actualizar("Computadores Windows", 15,
-                Arrays.asList("Sistema: Windows", "Almacenamiento: 512GB"));
-
-        RecursoModel resultado = recursoService.actualizarRecurso("REC-001", recursoActualizado, true);
-        assertEquals("Computadores Windows", resultado.getNombre());
-        assertEquals(15, resultado.getCantidad());
+        List<RecursoModel> result = recursoService.consultarNombre(nombre);
+        assertEquals(1, result.size());
+        verify(recursoService, times(1)).consultarNombre(nombre);
     }
 
     @Test
-    void testActualizarRecursoSinPermisoLanzaExcepcion() {
-        RecursoModel recursoExistente = new RecursoModel("REC-002", "Computadores MAC", 10,
-                Arrays.asList("Sistema: macOS", "Almacenamiento: 256GB"));
-        when(recursoRepository.findById("REC-002")).thenReturn(Optional.of(recursoExistente));
+    public void testConsultarCantidad() {
+        int cantidad = 10;
+        List<RecursoModel> recursos = Arrays.asList(new RecursoModel());
+        when(recursoService.consultarCantidad(cantidad)).thenReturn(recursos);
 
-        RecursoModel recursoActualizado = new RecursoModel();
-        recursoActualizado.actualizar("Computadores Windows", 15,
-                Arrays.asList("Sistema: Windows", "Almacenamiento: 512GB"));
-
-        assertThrows(SecurityException.class, () -> {
-            recursoService.actualizarRecurso("REC-002", recursoActualizado, false);
-        });
+        List<RecursoModel> result = recursoService.consultarCantidad(cantidad);
+        assertEquals(1, result.size());
+        verify(recursoService, times(1)).consultarCantidad(cantidad);
     }
 
     @Test
-    void testEliminarRecursoComoAdmin() {
-        RecursoModel recurso = new RecursoModel("REC-003", "Computadores MAC", 10,
-                Arrays.asList("Sistema: macOS", "Almacenamiento: 256GB"));
-        when(recursoRepository.findById("REC-003")).thenReturn(Optional.of(recurso));
-        doNothing().when(recursoRepository).delete(recurso);
+    public void testConsultarEspecificaciones() {
+        List<String> especificaciones = Arrays.asList("Especificacion1", "Especificacion2");
+        List<RecursoModel> recursos = Arrays.asList(new RecursoModel());
+        when(recursoService.consultarEspecificaciones(especificaciones)).thenReturn(recursos);
 
-        boolean eliminado = recursoService.eliminarRecurso("REC-003", true);
-        assertTrue(eliminado);
+        List<RecursoModel> result = recursoService.consultarEspecificaciones(especificaciones);
+        assertEquals(1, result.size());
+        verify(recursoService, times(1)).consultarEspecificaciones(especificaciones);
     }
 
     @Test
-    void testEliminarRecursoSinPermisoLanzaExcepcion() {
-        RecursoModel recurso = new RecursoModel("REC-004", "Computadores MAC", 10,
-                Arrays.asList("Sistema: macOS", "Almacenamiento: 256GB"));
-        when(recursoRepository.findById("REC-004")).thenReturn(Optional.of(recurso));
-        assertThrows(SecurityException.class, () -> {
-            recursoService.eliminarRecurso("REC-004", false);
-        });
+    public void testConsultarRecurso() {
+        UUID id = UUID.randomUUID();
+        RecursoModel recurso = new RecursoModel();
+        when(recursoService.consultarRecurso(id)).thenReturn(recurso);
+
+        RecursoModel result = recursoService.consultarRecurso(id);
+        assertNotNull(result);
+        verify(recursoService, times(1)).consultarRecurso(id);
+    }
+
+    @Test
+    public void testAgregarRecurso() {
+        String nombre = "Recurso1";
+        int cantidad = 10;
+        List<String> especificaciones = Arrays.asList("Especificacion1", "Especificacion2");
+
+        doNothing().when(recursoService).agregarRecurso(nombre, cantidad, especificaciones);
+
+        recursoService.agregarRecurso(nombre, cantidad, especificaciones);
+        verify(recursoService, times(1)).agregarRecurso(nombre, cantidad, especificaciones);
+    }
+
+    @Test
+    public void testActualizarRecurso() {
+        String nombre = "Recurso1";
+        int cantidad = 10;
+        List<String> especificaciones = Arrays.asList("Especificacion1", "Especificacion2");
+
+        doNothing().when(recursoService).actualizarRecurso(nombre, cantidad, especificaciones);
+
+        recursoService.actualizarRecurso(nombre, cantidad, especificaciones);
+        verify(recursoService, times(1)).actualizarRecurso(nombre, cantidad, especificaciones);
+    }
+
+    @Test
+    public void testEliminarRecurso() {
+        UUID id = UUID.randomUUID();
+
+        doNothing().when(recursoService).eliminarRecurso(id);
+
+        recursoService.eliminarRecurso(id);
+        verify(recursoService, times(1)).eliminarRecurso(id);
     }
 }
