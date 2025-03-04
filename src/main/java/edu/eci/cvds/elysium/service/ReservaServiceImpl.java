@@ -81,6 +81,8 @@ public class ReservaServiceImpl implements ReservaService {
                 default:
                     break;
             }
+            EstadoReservaModel estado = EstadoReservaModel.ACTIVA;
+            reserva.setEstado(estado);
             reservaRepository.save(reserva);
         }
     }

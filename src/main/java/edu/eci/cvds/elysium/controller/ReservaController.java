@@ -4,7 +4,7 @@ import edu.eci.cvds.elysium.model.DiaSemanaModel;
 import edu.eci.cvds.elysium.model.EstadoReservaModel;
 import edu.eci.cvds.elysium.model.ReservaModel;
 import edu.eci.cvds.elysium.service.ReservaService;
-import edu.eci.cvds.elysium.dto.ReservaDTO;
+import edu.eci.cvds.elysium.dto.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -65,17 +65,20 @@ public class ReservaController {
     }
 
     @PostMapping("/crearReserva")
-    public void crearReserva(@RequestBody ReservaDTO reservaDTO ) {
+    public ResponseEntity<String> crearReserva(@RequestBody ReservaDTO reservaDTO ) {
         reservaService.crearReserva(reservaDTO.getIdReserva(), reservaDTO.getFechaReserva(), reservaDTO.getDiaSemana(), reservaDTO.getProposito(), reservaDTO.getIdSalon(),reservaDTO.isDuracionBloque());
+        return ResponseEntity.ok("Reserva creada");
     }
 
-    // @PutMapping("/actualizarReserva")
-    // public void actualizarReserva(@RequestBody ReservaDTO reservaDTO) {
-    //     reservaService.actualizarReserva(reservaDTO.getIdReserva(), reservaDTO.getTipoCampo(), reservaDTO.getValue1(), reservaDTO.getValue2(), reservaDTO.getValue3(), reservaDTO.getValue4());
-    // }
+    @PutMapping("/actualizarReserva")
+    public ResponseEntity<String> actualizarReserva(@RequestBody ActualizarReservaDTO actualizarReservaDTO) {
+        reservaService.actualizarReserva(actualizarReservaDTO.getIdReserva(), actualizarReservaDTO.getTipoCampo(), actualizarReservaDTO.getValue1(), actualizarReservaDTO.getValue2(), actualizarReservaDTO.getValue3(), actualizarReservaDTO.getValue4());
+        return ResponseEntity.ok("Reserva actualizada");
+    }
 
     @DeleteMapping("{idReserva}/deleteReserva")
     public ResponseEntity<String> deleteReserva(@PathVariable String idReserva) {
+        reservaService.deleteReserva(idReserva);
         return ResponseEntity.ok("Reserva eliminada");
     }
 

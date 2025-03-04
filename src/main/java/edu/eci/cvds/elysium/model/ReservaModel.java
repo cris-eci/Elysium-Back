@@ -221,7 +221,7 @@ public class ReservaModel {
 
     /**
      * Deletes the reservation.
-     * @param idReserva the reservation ID
+     * @param idReserva the reservation ID  
      */
     public void deleteReserva(String idReserva) {
         if(this.idReserva.equals(idReserva)) {
