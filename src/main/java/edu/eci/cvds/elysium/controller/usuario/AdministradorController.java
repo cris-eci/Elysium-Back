@@ -79,7 +79,7 @@ public class AdministradorController extends UsuarioController {
                 usuarioDTO.getApellido(), usuarioDTO.getCorreo(), usuarioDTO.getIsAdmin());
     }
 
-    @PatchMapping("/actualizarInformacionUsuario/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<Void> actualizarInformacionUsuario(@PathVariable int id, 
             @RequestBody ActualizarUsuarioDTO actualizarUsuarioDTO) {
         // Opcional: Validar que el id en la URL y el dto coincidan.
