@@ -1,9 +1,9 @@
 package edu.eci.cvds.elysium.service;
 
-import edu.eci.cvds.elysium.model.Salon;
-
-import java.util.ArrayList;
 import java.util.List;
+
+import edu.eci.cvds.elysium.dto.salon.ActualizarSalonDTO;
+import edu.eci.cvds.elysium.model.Salon;
 
 public interface SalonService {
     
@@ -41,9 +41,7 @@ public interface SalonService {
     void deshabilitarSalon(String mnemonico);
     void habilitarSalon(String mnemonico);
     boolean getActivo(String mnemonico);  
-    void actualizarNombre(String mnemonico, String nuevoNombre);
-    void actualizarUbicacion(String mnemonico,String ubicacion);
-    void actualizarCapacidad(String mnemonico, int capacidad);
+    void actualizarSalon(String mnemonico, ActualizarSalonDTO dto);
     boolean getDisponible(String mnemonico);  
     boolean setDisponible(String mnemonico);
     boolean setNoDisponible(String mnemonico);    

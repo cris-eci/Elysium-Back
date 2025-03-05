@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -27,7 +28,8 @@ public class SalonController {
     /**
      * Retrieves a list of Salones based on various optional filtering criteria.
      * 
-     * This endpoint supports multiple filters that can be combined to refine the search results.
+     * This endpoint supports multiple filters that can be combined to refine the
+     * search results.
      * The possible filter combinations include:
      * - activo and disponible
      * - activo
@@ -40,13 +42,20 @@ public class SalonController {
      * 
      * There are at least 32 possible filter combinations.
      * 
-     * @param activo Optional Boolean filter to retrieve salones based on their active status.
-     * @param disponible Optional Boolean filter to retrieve salones based on their availability status.
-     * @param nombre Optional String filter to retrieve salones based on their name.
-     * @param ubicacion Optional String filter to retrieve salones based on their location.
-     * @param capacidadMin Optional Integer filter to retrieve salones with a minimum capacity.
-     * @param capacidadMax Optional Integer filter to retrieve salones with a maximum capacity.
-     * @return ResponseEntity containing a list of Salones that match the provided filters.
+     * @param activo       Optional Boolean filter to retrieve salones based on
+     *                     their active status.
+     * @param disponible   Optional Boolean filter to retrieve salones based on
+     *                     their availability status.
+     * @param nombre       Optional String filter to retrieve salones based on their
+     *                     name.
+     * @param ubicacion    Optional String filter to retrieve salones based on their
+     *                     location.
+     * @param capacidadMin Optional Integer filter to retrieve salones with a
+     *                     minimum capacity.
+     * @param capacidadMax Optional Integer filter to retrieve salones with a
+     *                     maximum capacity.
+     * @return ResponseEntity containing a list of Salones that match the provided
+     *         filters.
      */
     @GetMapping("")
     public ResponseEntity<List<Salon>> getSalones(
@@ -88,12 +97,12 @@ public class SalonController {
         return ResponseEntity.ok(salones);
     }
 
-    // // Consulta un salón específico por su mnemonico
-    // @GetMapping("/{mnemonico}")
-    // public ResponseEntity<Salon> getSalonByMnemonico(@PathVariable String mnemonico) {
-    //     Salon salon = salonService.findByMnemonico(mnemonico);
-    //     return salon != null ? ResponseEntity.ok(salon) : ResponseEntity.notFound().build();
-    // }
+    // Consulta un salón específico por su mnemonico
+    @GetMapping("/{mnemonico}")
+    public ResponseEntity<Salon> getSalonByMnemonico(@PathVariable String mnemonico) {
+        Salon salon = salonService.findByMnemonico(mnemonico);
+        return salon != null ? ResponseEntity.ok(salon) : ResponseEntity.notFound().build();
+    }
 
     // Agregar un nuevo salón
     @PostMapping("")
@@ -123,35 +132,6 @@ public class SalonController {
         return ResponseEntity.noContent().build();
     }
 
-    // Actualizzar el nombre del salón
-    @PutMapping("/{mnemonico}/actualizarNombre")
-    public ResponseEntity<Void> actualizarNombre(@RequestBody ActualizarSalonDTO actualizarSalonDTO) {
-        salonService.actualizarNombre(actualizarSalonDTO.getMnemonico(), actualizarSalonDTO.getValor());
-        return ResponseEntity.noContent().build();
-    }
-
-    // Actualizar la ubicación del salón
-    @PutMapping("/{mnemonico}/actualizarUbicacion")
-    public ResponseEntity<Void> actualizarUbicacion(@RequestBody ActualizarSalonDTO actualizarSalonDTO) {
-        salonService.actualizarUbicacion(actualizarSalonDTO.getMnemonico(), actualizarSalonDTO.getValor());
-        return ResponseEntity.noContent().build();
-    }
-
-    // Actualizar la capacidad del salón
-    @PutMapping("/{mnemonico}/actualizarCapacidad")
-    public ResponseEntity<Void> actualizarCapacidad(@RequestBody ActualizarSalonDTO actualizarSalonDTO) {
-        salonService.actualizarCapacidad(actualizarSalonDTO.getMnemonico(), actualizarSalonDTO.getCapacidad());
-        return ResponseEntity.noContent().build();
-    }
-
-    // this is already implemented in the service - later you can remove this
-    // // Consultar el estado 'activo' del salón
-    // @GetMapping("/{mnemonico}/activo")
-    // public ResponseEntity<Boolean> getActivo(@PathVariable String mnemonico) {
-    //     boolean activo = salonService.getActivo(mnemonico);
-    //     return ResponseEntity.ok(activo);
-    // }
-
     // Consultar el estado 'disponible' del salón
     @GetMapping("/{mnemonico}/disponible")
     public ResponseEntity<Boolean> getDisponible(@PathVariable String mnemonico) {
@@ -172,4 +152,13 @@ public class SalonController {
         boolean actualizado = salonService.setNoDisponible(mnemonico);
         return actualizado ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
+
+
+    @PatchMapping("/{mnemonico}")
+    public ResponseEntity<Void> actualizarSalon(@PathVariable String mnemonico, @RequestBody ActualizarSalonDTO dto) {
+        // El servicio actualizará solo los campos no nulos.
+        salonService.actualizarSalon(mnemonico, dto);
+        return ResponseEntity.noContent().build();
+    }
+
 }

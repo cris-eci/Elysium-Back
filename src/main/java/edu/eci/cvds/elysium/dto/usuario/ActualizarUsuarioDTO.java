@@ -18,7 +18,7 @@ public class ActualizarUsuarioDTO {
         this.isAdmin = isAdmin;
     }
 
-    public Integer getIdInstitucional() {
+    public Integer getIdInstitucional() {   
         return idInstitucional;
     }
 

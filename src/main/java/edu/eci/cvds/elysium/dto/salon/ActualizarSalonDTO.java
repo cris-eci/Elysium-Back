@@ -1,32 +1,45 @@
 package edu.eci.cvds.elysium.dto.salon;
 
 public class ActualizarSalonDTO {
+    // Campo obligatorio para identificar el salón.
     private String mnemonico;
-    private String valor;
-    private int capacidad;
+    // Los siguientes campos son opcionales; se actualizan si no son null.
+    private String nombre;
+    private String ubicacion;
+    private Integer capacidad;
 
-   public ActualizarSalonDTO(String mnemonico, String valor) {
-        this.mnemonico = mnemonico;
-        this.valor = valor;        
-    }   
+    public ActualizarSalonDTO() {}
 
-    public ActualizarSalonDTO(String mnemonico, int capacidad) {
-        this.mnemonico = mnemonico;
-        this.capacidad = capacidad;        
-    }
-
+    // Getters y setters
     public String getMnemonico() {
         return mnemonico;
     }
 
-    public int getCapacidad() {
+    public void setMnemonico(String mnemonico) {
+        this.mnemonico = mnemonico;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
+    }
+
+    public Integer getCapacidad() {
         return capacidad;
     }
-    
 
-    public String getValor() {
-        return valor;
+    public void setCapacidad(Integer capacidad) {
+        this.capacidad = capacidad;
     }
-
-
 }

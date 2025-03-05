@@ -1,11 +1,14 @@
 package edu.eci.cvds.elysium.service.impl;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import edu.eci.cvds.elysium.dto.salon.ActualizarSalonDTO;
 import edu.eci.cvds.elysium.model.Salon;
 import edu.eci.cvds.elysium.repository.SalonRepository;
 import edu.eci.cvds.elysium.service.SalonService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import java.util.List;
 
 @Service
 public class SalonServiceImpl implements SalonService {
@@ -132,41 +135,24 @@ public class SalonServiceImpl implements SalonService {
         return salon != null && salon.isActivo();
     }
 
-    /**
-     * Actualiza el nombre del salón.
-     */
     @Override
-    public void actualizarNombre(String mnemonico, String nuevoNombre) {
-        Salon salon = salonRepository.findByMnemonico(mnemonico);
-        if (salon != null) {
-            salon.setNombre(nuevoNombre);
-            salonRepository.save(salon);
+public void actualizarSalon(String mnemonico, ActualizarSalonDTO dto) {
+    // Buscamos el salón por su mnemonico.
+    Salon salon = salonRepository.findByMnemonico(mnemonico);
+    if (salon != null) {
+        // Actualizamos únicamente los campos enviados en el DTO (no null).
+        if (dto.getNombre() != null) {
+            salon.setNombre(dto.getNombre());
         }
-    }
-
-    /**
-     * Actualiza la ubicación del salón.
-     */
-    @Override
-    public void actualizarUbicacion(String mnemonico, String nuevaUbicacion) {
-        Salon salon = salonRepository.findByMnemonico(mnemonico);
-        if (salon != null) {
-            salon.setUbicacion(nuevaUbicacion);
-            salonRepository.save(salon);
+        if (dto.getUbicacion() != null) {
+            salon.setUbicacion(dto.getUbicacion());
         }
-    }
-
-    /**
-     * Actualiza la capacidad del salón.
-     */
-    @Override
-    public void actualizarCapacidad(String mnemonico, int nuevaCapacidad) {
-        Salon salon = salonRepository.findByMnemonico(mnemonico);
-        if (salon != null) {
-            salon.setCapacidad(nuevaCapacidad);
-            salonRepository.save(salon);
+        if (dto.getCapacidad() != null) {
+            salon.setCapacidad(dto.getCapacidad());
         }
+        salonRepository.save(salon);
     }
+}
 
     /**
      * Retorna el valor del atributo 'disponible' para el salón.
