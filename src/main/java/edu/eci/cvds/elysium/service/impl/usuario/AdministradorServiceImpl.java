@@ -139,5 +139,5 @@ public class AdministradorServiceImpl extends UsuarioServiceImpl implements Admi
             usuario.setAdmin(false);
             usuarioRepository.save(usuario);
         }
-    }
+    }   
 }
