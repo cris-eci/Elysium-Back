@@ -1,15 +1,21 @@
 package edu.eci.cvds.elysium.controller;
 
-import edu.eci.cvds.elysium.model.Salon;
-import edu.eci.cvds.elysium.service.SalonService;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import edu.eci.cvds.elysium.dto.salon.ActualizarSalonDTO;
+import edu.eci.cvds.elysium.model.Salon;
+import edu.eci.cvds.elysium.service.SalonService;
 
 @RestController
 @RequestMapping("/api/salones")
@@ -138,6 +144,7 @@ public class SalonController {
         return ResponseEntity.noContent().build();
     }
 
+    // this is already implemented in the service - later you can remove this
     // // Consultar el estado 'activo' del salón
     // @GetMapping("/{mnemonico}/activo")
     // public ResponseEntity<Boolean> getActivo(@PathVariable String mnemonico) {

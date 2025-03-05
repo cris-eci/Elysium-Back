@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -20,23 +21,24 @@ import edu.eci.cvds.elysium.service.usuario.AdministradorService;
 
 @RestController
 @RequestMapping("/api/administrador")
-public class AdministradorController extends UsuarioController{
+public class AdministradorController extends UsuarioController {
 
     @Autowired
     private AdministradorService administradorService;
 
-        /**
+    /**
      * Endpoint unificado para consultar usuarios.
      * Se pueden usar los parámetros opcionales:
-     *   - activo: true/false para filtrar por estado activo.
-     *   - isAdmin: true/false para filtrar por rol de administrador.
+     * - activo: true/false para filtrar por estado activo.
+     * - isAdmin: true/false para filtrar por rol de administrador.
      * 
      * Ejemplos:
-     *   GET /api/users           -> retorna todos los usuarios.
-     *   GET /api/users?activo=true           -> usuarios activos.
-     *   GET /api/users?activo=false          -> usuarios inactivos.
-     *   GET /api/users?isAdmin=true          -> usuarios que son administradores.
-     *   GET /api/users?activo=true&isAdmin=false  -> usuarios activos que no son administradores.
+     * GET /api/users -> retorna todos los usuarios.
+     * GET /api/users?activo=true -> usuarios activos.
+     * GET /api/users?activo=false -> usuarios inactivos.
+     * GET /api/users?isAdmin=true -> usuarios que son administradores.
+     * GET /api/users?activo=true&isAdmin=false -> usuarios activos que no son
+     * administradores.
      */
     @GetMapping("")
     public List<Usuario> consultarUsuarios(
@@ -56,7 +58,8 @@ public class AdministradorController extends UsuarioController{
         if (activo == null && isAdmin != null) {
             return isAdmin
                     ? administradorService.consultarUsuariosAdmins()
-                    : administradorService.consultarUsuariosActiveNoAdmins(); // O se pueden combinar activos e inactivos
+                    : administradorService.consultarUsuariosActiveNoAdmins(); // O se pueden combinar activos e
+                                                                              // inactivos
         }
         // Si se filtran ambos
         if (activo && isAdmin) {
@@ -76,9 +79,10 @@ public class AdministradorController extends UsuarioController{
                 usuarioDTO.getApellido(), usuarioDTO.getCorreo(), usuarioDTO.getIsAdmin());
     }
 
-    @PutMapping("/actualizarInformacionUsuario")
-    public void actualizarInformacionUsuario(@RequestBody ActualizarUsuarioDTO actualizarUsuario) {
-        administradorService.actualizarInformacionUsuario(actualizarUsuario.getIdInstitucional(), actualizarUsuario.getTipoCampo(), actualizarUsuario.getValue());
+    @PatchMapping("/actualizarInformacionUsuario")
+    public ResponseEntity<Void> actualizarInformacionUsuario(@RequestBody ActualizarUsuarioDTO actualizarUsuarioDTO) {
+        administradorService.actualizarInformacionUsuario(actualizarUsuarioDTO);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("{id}/deshabilitarUsuario")
@@ -97,15 +101,14 @@ public class AdministradorController extends UsuarioController{
     public ResponseEntity<String> hacerAdmin(@PathVariable int id) {
         administradorService.hacerAdmin(id);
         return ResponseEntity.ok("Usuario ahora es administrador");
-    }   
-
+    }
 
     // // ----------
     // @PostMapping("/añadirSalon")
     // public void añadirSalon(@RequestParam int adminId,
-    //         @RequestParam String nombre,
-    //         @RequestParam String ubicacion,
-    //         @RequestParam int capacidad) {
-    //     administradorService.añadirSalon(adminId, nombre, ubicacion, capacidad);
+    // @RequestParam String nombre,
+    // @RequestParam String ubicacion,
+    // @RequestParam int capacidad) {
+    // administradorService.añadirSalon(adminId, nombre, ubicacion, capacidad);
     // }
 }
