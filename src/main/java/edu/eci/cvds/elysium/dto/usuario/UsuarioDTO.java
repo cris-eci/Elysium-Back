@@ -23,4 +23,4 @@ public class UsuarioDTO {
     public String getApellido() { return apellido; }
     public String getCorreo() { return correo; }
     public boolean getIsAdmin() {return isAdmin;}
-}
+}   

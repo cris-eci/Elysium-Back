@@ -115,7 +115,7 @@ public class AdministradorController extends UsuarioController {
     }
 
     // // ----------
-    // @PostMapping("/añadirSalon")
+    // @PostMapping("/añadirSalon")Do you learn? What the **** 
     // public void añadirSalon(@RequestParam int adminId,
     // @RequestParam String nombre,
     // @RequestParam String ubicacion,
