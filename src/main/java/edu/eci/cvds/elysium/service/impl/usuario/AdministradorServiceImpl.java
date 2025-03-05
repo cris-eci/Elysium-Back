@@ -131,4 +131,13 @@ public class AdministradorServiceImpl extends UsuarioServiceImpl implements Admi
             usuarioRepository.save(usuario);
         }
     }
+
+    @Override
+    public void quitarAdmin(int id) {
+        Usuario usuario = usuarioRepository.findByIdInstitucional(id);
+        if (usuario != null) {
+            usuario.setAdmin(false);
+            usuarioRepository.save(usuario);
+        }
+    }
 }

@@ -108,6 +108,12 @@ public class AdministradorController extends UsuarioController {
         return ResponseEntity.ok("Usuario ahora es administrador");
     }
 
+    @PutMapping("{id}/quitarAdmin")
+    public ResponseEntity<String> quitarAdmin(@PathVariable int id) {
+        administradorService.quitarAdmin(id);
+        return ResponseEntity.ok("Usuario ya no es administrador");
+    }
+
     // // ----------
     // @PostMapping("/añadirSalon")
     // public void añadirSalon(@RequestParam int adminId,
