@@ -71,8 +71,8 @@ public class ReservaController {
     }
 
     @PutMapping("/actualizarReserva")
-    public ResponseEntity<String> actualizarReserva(@RequestBody ActualizarReservaDTO actualizarReservaDTO) {
-        reservaService.actualizarReserva(actualizarReservaDTO.getIdReserva(), actualizarReservaDTO.getTipoCampo(), actualizarReservaDTO.getValue1(), actualizarReservaDTO.getValue2(), actualizarReservaDTO.getValue3(), actualizarReservaDTO.getValue4());
+    public ResponseEntity<String> actualizarReserva(@RequestBody ReservaDTO reservaDTO) {
+        reservaService.actualizarReserva(reservaDTO.getIdReserva(), reservaDTO.getTipoCampo(), reservaDTO.getFechaReserva(), reservaDTO.getDiaSemana(), reservaDTO.getIdSalon(), reservaDTO.isDuracionBloque());
         return ResponseEntity.ok("Reserva actualizada");
     }
 

@@ -2,14 +2,13 @@ package edu.eci.cvds.elysium.dto;
 
 import java.time.LocalDate;
 import edu.eci.cvds.elysium.model.DiaSemanaModel;
-import edu.eci.cvds.elysium.model.SalonModel;
 import edu.eci.cvds.elysium.model.EstadoReservaModel;
 
 public class ReservaDTO {
     
     private String idReserva;
     private LocalDate fechaReserva;
-
+    private char tipoCampo;
     // Se representa el día de la semana como String (por ejemplo, "LUNES")
     private DiaSemanaModel diaSemana;
     private String proposito;
@@ -45,9 +44,19 @@ public class ReservaDTO {
         this.duracionBloque = duracionBloque;
     }
 
+    public ReservaDTO(String idReserva,char tipoCampo, LocalDate fechaReserva, DiaSemanaModel diaSemana, String idSalon, boolean duracionBloque) {
+        this.idReserva = idReserva;
+        this.tipoCampo = tipoCampo;
+        this.fechaReserva = fechaReserva;
+        this.diaSemana = diaSemana;
+        this.idSalon = idSalon;
+        this.duracionBloque = duracionBloque;
+    }
+
     //Getters
     public String getIdReserva() {return idReserva;}
     public LocalDate getFechaReserva() {return fechaReserva;}
+    public char getTipoCampo() {return tipoCampo;}
     public DiaSemanaModel getDiaSemana() {return diaSemana;}
     public String getProposito() {return proposito;}
     public String getIdSalon() {return idSalon;}
