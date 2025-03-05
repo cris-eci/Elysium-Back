@@ -1,8 +1,8 @@
 package edu.eci.cvds.elysium.service;
 
 import java.util.List;
-import java.util.UUID;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,31 +36,50 @@ public class RecursoServiceImpl implements RecursoService {
     }
 
     @Override
-    public RecursoModel consultarRecurso(UUID id) {
-        return recursoRepository.findById(id);
+    public RecursoModel consultarRecurso(ObjectId id) {
+        return recursoRepository.findByObjectID(id);
     }
 
     @Override
     public void agregarRecurso(String nombre, int cantidad, List<String> especificaciones) {
         RecursoModel recurso = new RecursoModel(nombre, cantidad, especificaciones);
         recurso.crearRecurso(nombre, cantidad, especificaciones);
+        boolean activo = true;
+        recurso.setActivo(activo);
         recursoRepository.save(recurso);
     }
 
     @Override
-    public void actualizarRecurso(String nombre, int cantidad, List<String> especificaciones) {
-        RecursoModel recurso = recursoRepository.findById(UUID.randomUUID());
+    public void actualizarRecurso(ObjectId id,char tipoCampo,String nuevoNombre, int nuevaCantidad, List<String> nuevasEspecificaciones) {
+        RecursoModel recurso = recursoRepository.findByObjectID(id);
         if(recurso != null ){
-            recurso.actualizar(nombre, cantidad, especificaciones);
+            recurso.actualizar(id, tipoCampo, nuevoNombre, nuevaCantidad, nuevasEspecificaciones);
+            switch (tipoCampo){
+                case 'n':
+                    recurso.setNombre(nuevoNombre);
+                    break;
+                case 'c':
+                    recurso.setCantidad(nuevaCantidad);
+                    break;
+                case 'e':
+                    recurso.setEspecificaciones(nuevasEspecificaciones);
+                    break;
+                default:
+                    break;
+            }
+            boolean activo = true;
+            recurso.setActivo(activo);
             recursoRepository.save(recurso);
         }
     }
 
     @Override
-    public void eliminarRecurso(UUID id) {
-        RecursoModel recurso = recursoRepository.findById(id);
+    public void eliminarRecurso(ObjectId id) {
+        RecursoModel recurso = recursoRepository.findByObjectID(id);
         if(recurso != null){
             recursoRepository.delete(recurso);
+            boolean activo = false;
+            recurso.setActivo(activo);
             recursoRepository.save(recurso);
         }
     }

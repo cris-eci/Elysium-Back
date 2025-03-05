@@ -3,6 +3,12 @@ package edu.eci.cvds.elysium.model;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+
 import java.util.List;
 
 /**
@@ -12,11 +18,12 @@ import java.util.List;
 public class RecursoModel {
 
     @Id
-    private ObjectId id; // Se usará ObjectId y Mongo lo generará automáticamente;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private ObjectId objectID; // Se usará ObjectId y Mongo lo generará automáticamente;
     private String nombre;
     private int cantidad;
     private List<String> especificaciones;
-    
+    private boolean activo;
     public RecursoModel() {
     }
 
@@ -27,9 +34,11 @@ public class RecursoModel {
      * @param especificaciones specifications of the resource
      */
     public RecursoModel(String nombre, int cantidad, List<String> especificaciones) {
+        this.objectID = new ObjectId();
         this.nombre = nombre;
         this.cantidad = cantidad;
         this.especificaciones = especificaciones;
+        this.activo = true;
     }
 
     /**
@@ -37,8 +46,10 @@ public class RecursoModel {
      *
      * @return the resource ID
      */
+    @JsonIgnore
+    @JsonProperty("id")
     public ObjectId getId() {
-        return id;
+        return objectID;
     }
 
     /**
@@ -46,7 +57,7 @@ public class RecursoModel {
      * @param id the resource ID
      */
     public void setId(ObjectId id) {
-        this.id = id;
+        this.objectID = id;
     }
 
 
@@ -97,6 +108,22 @@ public class RecursoModel {
     public void setEspecificaciones(List<String> especificaciones) {
         this.especificaciones = especificaciones;
     }
+
+    /**
+     * Gets the resource status.
+     * @return the resource status
+     */
+    public boolean isActivo() {
+        return activo;
+    }
+
+    /**
+     * Sets the resource status.
+     * @param activo the resource status
+     */
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
     
     /**
      * Creates a new resource with the given data.
@@ -106,35 +133,47 @@ public class RecursoModel {
      * @return the new resource
      */
     public RecursoModel crearRecurso(String nombre, int cantidad, List<String> especificaciones) {
+        this.objectID = new ObjectId();
+        this.activo = true;
         return new RecursoModel(nombre, cantidad, especificaciones);
     }
 
 
     /**
-     * Updates the resource with the new data.
-     * @param nuevoNombre new name of the resource
-     * @param nuevaCantidad new amount of the resource
-     * @param nuevasEspecificaciones new specifications of the resource
+     * Updates the resource.
+     * @param id the resource ID
+     * @param tipoCampo the type of field to update
+     * @param nuevoNombre the new name of the resource
+     * @param nuevaCantidad the new amount of the resource
+     * @param nuevasEspecificaciones the new specifications of the resource
      */
-    public void actualizar(String nuevoNombre, Integer nuevaCantidad, List<String> nuevasEspecificaciones) {
-        if (nuevoNombre != null) {
-            this.nombre = nuevoNombre;
+    public void actualizar(ObjectId id,char tipoCampo, String nuevoNombre, int nuevaCantidad, List<String> nuevasEspecificaciones) {
+        if(this.objectID.equals(id)){
+            switch (tipoCampo) {
+                case 'n':
+                    this.nombre = nuevoNombre;
+                    break;
+                case 'c':
+                    this.cantidad = nuevaCantidad;
+                    break;
+                case 'e':
+                    this.especificaciones = nuevasEspecificaciones;
+                    break;
+                default:
+                    break;
+            }
         }
-        if (nuevaCantidad != null) {
-            this.cantidad = nuevaCantidad;
-        }
-        if (nuevasEspecificaciones != null) {
-            this.especificaciones = nuevasEspecificaciones;
-        }
+        this.activo = true;
     }
 
     /**
      * Deletes the resource.
+     * @param id the resource ID
      */
-    public void eliminar(String id) {
-        this.nombre = null;
-        this.cantidad = 0;
-        this.especificaciones = null;
+    public void eliminar(ObjectId id) {
+        if(this.objectID.equals(id)){
+            this.activo = false;
+        }
     }
 
 }

@@ -5,8 +5,9 @@ import edu.eci.cvds.elysium.model.RecursoModel;
 import edu.eci.cvds.elysium.service.RecursoService;
 
 import java.util.List;
-import java.util.UUID;
 
+import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/recurso")
 public class RecursoController {
 
+    @Autowired
     private RecursoService recursoService;
 
     @GetMapping("/consultarRecursos")
@@ -37,22 +39,24 @@ public class RecursoController {
     }
 
     @GetMapping("/consultarRecurso")
-    RecursoModel consultarRecurso(@RequestParam UUID id){
+    RecursoModel consultarRecurso(@RequestParam ObjectId id){
         return recursoService.consultarRecurso(id);
     }
 
     @PostMapping("/agregarRecurso")
-    public void agregarRecurso(@RequestBody RecursoDTO recursoDTO){
+    public ResponseEntity<String> agregarRecurso(@RequestBody RecursoDTO recursoDTO){
         recursoService.agregarRecurso(recursoDTO.getNombre(), recursoDTO.getCantidad(), recursoDTO.getEspecificaciones());
+        return ResponseEntity.ok("Recurso agregado");
     }
 
     @PutMapping("/actualizarRecurso")
-    public void actualizarRecurso(@RequestBody RecursoDTO recursoDTO){
-        recursoService.actualizarRecurso(recursoDTO.getNombre(), recursoDTO.getCantidad(), recursoDTO.getEspecificaciones());
+    public ResponseEntity<String> actualizarRecurso(@RequestBody RecursoDTO recursoDTO){
+        recursoService.actualizarRecurso(recursoDTO.getId(),recursoDTO.getTipoCampo(),recursoDTO.getNombre(), recursoDTO.getCantidad(), recursoDTO.getEspecificaciones());
+        return ResponseEntity.ok("Recurso actualizado");
     }
 
-    @PutMapping("{id}/eliminarRecurso")
-    public ResponseEntity<String> eliminarRecurso(@PathVariable UUID id){
+    @DeleteMapping("{id}/eliminarRecurso")
+    public ResponseEntity<String> eliminarRecurso(@PathVariable ObjectId id){
         recursoService.eliminarRecurso(id);
         return ResponseEntity.ok("Recurso eliminado");
     }
