@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.eci.cvds.elysium.dto.usuario.ActualizarUsuarioDTO;
 import edu.eci.cvds.elysium.model.usuario.Administrador;
 import edu.eci.cvds.elysium.model.usuario.Estandar;
 import edu.eci.cvds.elysium.model.usuario.Usuario;
@@ -17,7 +18,6 @@ public class AdministradorServiceImpl extends UsuarioServiceImpl implements Admi
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    
     @Override
     public List<Usuario> consultarUsuarios() {
         return usuarioRepository.findAll();
@@ -59,27 +59,23 @@ public class AdministradorServiceImpl extends UsuarioServiceImpl implements Admi
     }
 
     @Override
-    public void actualizarInformacionUsuario(int idInstitucional, char tipoCampo, String value) {
-        // Usamos findByIdInstitucional definido en el repository de Mongo
-        Usuario usuario = usuarioRepository.findByIdInstitucional(idInstitucional);
+    public void actualizarInformacionUsuario(ActualizarUsuarioDTO dto) {
+        // Buscamos el usuario por su ID institucional.
+        Usuario usuario = usuarioRepository.findByIdInstitucional(dto.getIdInstitucional());
         if (usuario != null) {
-            if (usuario instanceof Administrador) {
-                ((Administrador) usuario).actualizar(idInstitucional, tipoCampo, value);
-            } else {
-                // Para usuarios estandar actualizamos los campos comunes
-                switch (tipoCampo) {
-                    case 'n':
-                        usuario.setNombre(value);
-                        break;
-                    case 'a':
-                        usuario.setApellido(value);
-                        break;
-                    case 'c':
-                        usuario.setCorreoInstitucional(value);
-                        break;
-                    default:
-                        break;
-                }
+            // Actualizamos únicamente si el campo no es nulo.
+            if (dto.getNombre() != null) {
+                usuario.setNombre(dto.getNombre());
+            }
+            if (dto.getApellido() != null) {
+                usuario.setApellido(dto.getApellido());
+            }
+            if (dto.getCorreo() != null) {
+                usuario.setCorreoInstitucional(dto.getCorreo());
+            }
+            // Suponiendo que para cambiar el rol se requiere lógica adicional.
+            if (dto.getIsAdmin() != null) {
+                usuario.setAdmin(dto.getIsAdmin());
             }
             usuarioRepository.save(usuario);
         }
@@ -107,7 +103,8 @@ public class AdministradorServiceImpl extends UsuarioServiceImpl implements Admi
     public void agregarUsuario(int idInstitucional, String nombre, String apellido, String correoInstitucional,
             boolean isAdmin) {
         if (isAdmin) {
-            Administrador nuevoUsuario = new Administrador(idInstitucional, nombre, apellido, correoInstitucional, true);
+            Administrador nuevoUsuario = new Administrador(idInstitucional, nombre, apellido, correoInstitucional,
+                    true);
             usuarioRepository.save(nuevoUsuario);
         } else {
             Estandar nuevoUsuario = new Estandar(idInstitucional, nombre, apellido, correoInstitucional, true);
@@ -116,13 +113,14 @@ public class AdministradorServiceImpl extends UsuarioServiceImpl implements Admi
     }
 
     // @Override
-    // public void añadirSalon(int adminId, String nombre, String ubicacion, int capacidad) {
-    //     Usuario usuario = usuarioRepository.findByIdInstitucional(adminId);
-    //     if (usuario != null && usuario instanceof Administrador) {
-    //         Administrador admin = (Administrador) usuario;
-    //         admin.añadirSalon(nombre, ubicacion, capacidad);
-    //         usuarioRepository.save(admin);
-    //     }
+    // public void añadirSalon(int adminId, String nombre, String ubicacion, int
+    // capacidad) {
+    // Usuario usuario = usuarioRepository.findByIdInstitucional(adminId);
+    // if (usuario != null && usuario instanceof Administrador) {
+    // Administrador admin = (Administrador) usuario;
+    // admin.añadirSalon(nombre, ubicacion, capacidad);
+    // usuarioRepository.save(admin);
+    // }
     // }
 
     @Override

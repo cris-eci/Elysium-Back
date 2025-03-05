@@ -2,6 +2,7 @@ package edu.eci.cvds.elysium.service.usuario;
 
 import java.util.List;
 
+import edu.eci.cvds.elysium.dto.usuario.ActualizarUsuarioDTO;
 import edu.eci.cvds.elysium.model.usuario.Usuario;
 
 public interface AdministradorService extends UsuarioService {
@@ -14,7 +15,7 @@ public interface AdministradorService extends UsuarioService {
     List<Usuario> consultarUsuariosActiveNoAdmins();
     List<Usuario> consultarUsuariosInactiveNoAdmins();
     void agregarUsuario(int idInstitucional, String nombre, String apellido, String correoInstitucional, boolean isAdmin);
-    void actualizarInformacionUsuario(int idInstitucional, char tipoCampo, String value);
+    void actualizarInformacionUsuario(ActualizarUsuarioDTO dto);
     void habilitarUsuario(int idInstitucional);
     void deshabilitarUsuario(int idInstitucional);
     void hacerAdmin(int id);

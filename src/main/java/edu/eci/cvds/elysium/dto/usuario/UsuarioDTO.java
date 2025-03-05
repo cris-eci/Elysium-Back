@@ -16,6 +16,7 @@ public class UsuarioDTO {
         this.isAdmin = isAdmin; 
     }
 
+
     // Getters
     public int getId() { return id; }
     public String getNombre() { return nombre; }
