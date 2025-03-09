@@ -1,10 +1,10 @@
-name: Java CI Workflow
+name: CI/CD Pipeline Production
 
 on:
-  pull_request:
+
+  push:
     branches:
       - main
-      - release
 
 jobs:
   build:
@@ -21,7 +21,8 @@ jobs:
       - name: Maven Package
         run: mvn clean package -DskipTests
       - name: Upload Artifact for deployment job
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
+        main
         with:
           name: springboot-example
           path: target/*.jar
@@ -54,7 +55,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download Artifact from build job
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
+
         with:
           name: springboot-example
       - name: Deploy to Azure App Service
