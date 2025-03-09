@@ -60,5 +60,5 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: brightness       # Reemplaza con el nombre de tu App Service para testing
-          publish-profile: ${{ secrets.azureWebAppPublishProfile }}
+          publish-profile: ${{ secrets.AZURE_BRIGHTNESS_PUBLISH_PROFILE  }}
           package: '*.jar'
